@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:15-alpine
+    container_name: mesheer-postgres
+    environment:
+      POSTGRES_USER: mesheer
+      POSTGRES_PASSWORD: mesheer123
+      POSTGRES_DB: mesheer_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mesheer-network
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: mesheer-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - mesheer-network
+
+  # pgAdmin (数据库管理工具)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: mesheer-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mesheer.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+    networks:
+      - mesheer-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  mesheer-network:
+    driver: bridge
