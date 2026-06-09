@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电网科技项目报告评审系统 - 方案对比</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-deep: #0a192f;
+            --primary-blue: #172a45;
+            --accent-cyan: #64ffda;
+            --accent-blue: #00b4d8;
+            --text-light: #e6f1ff;
+            --text-muted: #8892b0;
+            --card-bg: rgba(23, 42, 69, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #0a192f 0%, #112240 50%, #0a192f 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 180, 216, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--text-light) 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .方案-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .方案-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .方案-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(100, 255, 218, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 180, 216, 0.15);
+        }
+
+        .方案-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .方案-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: var(--primary-deep);
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .方案-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+            color: var(--text-light);
+        }
+
+        .方案-desc {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .tech-stack {
+            margin-bottom: 30px;
+        }
+
+        .tech-stack-title {
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tech-tag {
+            padding: 6px 12px;
+            background: rgba(100, 255, 218, 0.1);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .features-list {
+            list-style: none;
+        }
+
+        .features-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.95rem;
+        }
+
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            color: var(--accent-cyan);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .recommended-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .architecture-diagram {
+            background: var(--card-bg);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .diagram-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--text-light);
+        }
+
+        .architecture-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flow-step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 30px rgba(0, 180, 216, 0.3);
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+
+        .step-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            color: var(--accent-cyan);
+            opacity: 0.5;
+        }
+
+        .evaluation-dimensions {
+            background: var(--card-bg);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .dimensions-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--text-light);
+        }
+
+        .dimension-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .dimension-card {
+            background: rgba(10, 25, 47, 0.5);
+            border: 1px solid rgba(100, 255, 218, 0.15);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .dimension-card:hover {
+            border-color: rgba(100, 255, 218, 0.4);
+            transform: translateY(-4px);
+        }
+
+        .dimension-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .dimension-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .dimension-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .dimension-items {
+            list-style: none;
+        }
+
+        .dimension-items li {
+            padding: 8px 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dimension-items li::before {
+            content: '→';
+            color: var(--accent-cyan);
+        }
+
+        .action-section {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(0, 180, 216, 0.05) 0%, rgba(100, 255, 218, 0.05) 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .action-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        .action-desc {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 16px 40px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: var(--primary-deep);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 180, 216, 0.4);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            border: 2px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .cta-secondary:hover {
+            background: rgba(100, 255, 218, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .architecture-flow {
+                flex-direction: column;
+            }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 25, 47, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader {
+            text-align: center;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(100, 255, 218, 0.2);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">正在加载方案对比...</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>电网科技项目报告评审系统</h1>
+            <p class="subtitle">
+                基于人工智能的科技项目报告智能评审解决方案<br>
+                助力电网行业评审效率提升与质量标准化
+            </p>
+        </header>
+
+        <section class="comparison-grid">
+            <div class="方案-card">
+                <div class="recommended-badge">推荐方案</div>
+                <div class="方案-badge">方案 A</div>
+                <h3 class="方案-title">轻量化快速部署</h3>
+                <p class="方案-desc">
+                    基于开源大语言模型（LLM），无需外部API，适合本地快速验证和小规模使用场景。完全离线运行，数据安全有保障。
+                </p>
+                <div class="tech-stack">
+                    <div class="tech-stack-title">核心技术栈</div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Ollama</span>
+                        <span class="tech-tag">LangChain</span>
+                        <span class="tech-tag">ChromaDB</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Vue.js</span>
+                    </div>
+                </div>
+                <ul class="features-list">
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>完全本地部署，数据不出内网</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>快速启动，1-2天可完成Demo</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>低成本，适合小规模试用</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>可对接私有知识库</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="方案-card">
+                <div class="方案-badge">方案 B</div>
+                <h3 class="方案-title">API增强型方案</h3>
+                <p class="方案-desc">
+                    调用商业大模型API（GPT-4/Claude等），结合RAG知识增强框架。性能更强，支持更复杂的评审逻辑，适合中等规模应用。
+                </p>
+                <div class="tech-stack">
+                    <div class="tech-stack-title">核心技术栈</div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">OpenAI API</span>
+                        <span class="tech-tag">LangChain</span>
+                        <span class="tech-tag">Pinecone</span>
+                        <span class="tech-tag">FastAPI</span>
+                        <span class="tech-tag">React</span>
+                    </div>
+                </div>
+                <ul class="features-list">
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>模型能力强，评审质量高</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>支持复杂多轮对话分析</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>云端部署，运维简单</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>支持多租户、并发访问</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="方案-card">
+                <div class="方案-badge">方案 C</div>
+                <h3 class="方案-title">企业级完整方案</h3>
+                <p class="方案-desc">
+                    完整的企业级架构，包含微服务、消息队列、缓存系统等。支持高并发、定制化开发，与企业现有系统无缝集成。
+                </p>
+                <div class="tech-stack">
+                    <div class="tech-stack-title">核心技术栈</div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Docker/K8s</span>
+                        <span class="tech-tag">Spring Cloud</span>
+                        <span class="tech-tag">RabbitMQ</span>
+                        <span class="tech-tag">Redis</span>
+                        <span class="tech-tag">Milvus</span>
+                        <span class="tech-tag">Vue/React</span>
+                    </div>
+                </div>
+                <ul class="features-list">
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>高可用、高并发架构</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>支持大规模部署</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>可与OA/项目管理系统集成</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>支持持续学习和模型优化</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="architecture-diagram">
+            <h2 class="diagram-title">系统核心流程</h2>
+            <div class="architecture-flow">
+                <div class="flow-step">
+                    <div class="step-icon">📄</div>
+                    <div class="step-title">报告上传</div>
+                    <div class="step-desc">支持PDF、Word、Markdown多格式</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-icon">🔍</div>
+                    <div class="step-title">智能解析</div>
+                    <div class="step-desc">自动提取章节结构和关键信息</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-icon">📊</div>
+                    <div class="step-title">多维评审</div>
+                    <div class="step-desc">技术/规范/业务三维度分析</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-icon">📝</div>
+                    <div class="step-title">意见生成</div>
+                    <div class="step-desc">结构化评审报告自动生成</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-icon">👤</div>
+                    <div class="step-title">专家审核</div>
+                    <div class="step-desc">人工确认与修改完善</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="evaluation-dimensions">
+            <h2 class="dimensions-title">评审维度体系</h2>
+            <div class="dimension-cards">
+                <div class="dimension-card">
+                    <div class="dimension-header">
+                        <div class="dimension-icon">⚡</div>
+                        <div class="dimension-name">技术质量</div>
+                    </div>
+                    <ul class="dimension-items">
+                        <li>创新性与先进性评价</li>
+                        <li>技术路线合理性</li>
+                        <li>研究方法科学性</li>
+                        <li>技术指标达成度</li>
+                    </ul>
+                </div>
+
+                <div class="dimension-card">
+                    <div class="dimension-header">
+                        <div class="dimension-icon">📋</div>
+                        <div class="dimension-name">报告规范</div>
+                    </div>
+                    <ul class="dimension-items">
+                        <li>结构完整性与逻辑性</li>
+                        <li>内容关联度分析</li>
+                        <li>格式规范性检查</li>
+                        <li>表述清晰度评价</li>
+                    </ul>
+                </div>
+
+                <div class="dimension-card">
+                    <div class="dimension-header">
+                        <div class="dimension-icon">🏢</div>
+                        <div class="dimension-name">业务结合</div>
+                    </div>
+                    <ul class="dimension-items">
+                        <li>与公司战略契合度</li>
+                        <li>业务场景实用性</li>
+                        <li>可推广性评估</li>
+                        <li>经济效益分析</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="action-section">
+            <h2 class="action-title">准备好开始了吗？</h2>
+            <p class="action-desc">
+                无论您选择哪种方案，我们都可以为您快速搭建一个演示环境，<br>
+                让您亲身体验智能评审系统的强大功能。
+            </p>
+            <div class="cta-buttons">
+                <button class="cta-btn cta-primary" onclick="selectPlan('A')">
+                    🚀 选择方案A - 快速Demo
+                </button>
+                <button class="cta-btn cta-secondary" onclick="selectPlan('B')">
+                    ⚡ 选择方案B - API增强
+                </button>
+                <button class="cta-btn cta-secondary" onclick="selectPlan('C')">
+                    🏢 选择方案C - 企业级
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }, 800);
+        });
+
+        function selectPlan(plan) {
+            const planNames = {
+                'A': '轻量化快速部署方案',
+                'B': 'API增强型方案',
+                'C': '企业级完整方案'
+            };
+            alert('您选择了：' + planNames[plan] + '\n\n我们将为您创建详细的设计方案文档，请继续对话。');
+        }
+    </script>
+</body>
+</html>

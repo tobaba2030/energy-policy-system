@@ -1,0 +1,11 @@
+{
+  "name": "docx-cn",
+  "version": "2.0.0",
+  "description": "中文Word文档生成插件 - 支持技术文档、学术论文、学位论文、技术报告等多模板生成",
+  "license": "MIT",
+  "author": "zhuow",
+  "keywords": ["docx", "word", "中文", "文档", "论文", "学术"],
+  "dependencies": {
+    "docx": "^9.6.1"
+  }
+}

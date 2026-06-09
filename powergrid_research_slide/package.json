@@ -1,0 +1,9 @@
+{
+  "name": "powergrid-research-slide",
+  "version": "1.0.0",
+  "description": "Academic-style PPT for power grid research",
+  "main": "research_slide.js",
+  "dependencies": {
+    "pptxgenjs": "^4.0.1"
+  }
+}

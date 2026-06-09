@@ -1,0 +1,22 @@
+{
+  "name": "grid-tech-report-review",
+  "version": "2.0.0",
+  "description": "电网领域科技项目技术成果报告评审技能",
+  "main": "scripts/review_engine.js",
+  "scripts": {
+    "review": "node scripts/cli.js",
+    "test": "node scripts/cli.js -n \"测试项目\" \"测试内容\""
+  },
+  "keywords": [
+    "电网",
+    "科技项目",
+    "技术成果报告",
+    "评审",
+    "docx"
+  ],
+  "author": "zhuow",
+  "license": "MIT",
+  "dependencies": {
+    "docx": "^8.5.0"
+  }
+}

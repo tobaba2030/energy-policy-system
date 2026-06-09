@@ -1,0 +1,3 @@
+display_name: Image2 PPT Wangzhuo
+short_description: Create image2-driven PPT decks from reference PPT templates.
+default_prompt: Use imag2-ppt-wangzhuo to turn my reference PPT and topic prompt into an image-only PPT deck with an outline, generated slide images, and an auditable assembly package.

@@ -1,0 +1,164 @@
+const mindMapData = {
+  name: "超级智能个体赋能科创团队",
+  children: [
+    {
+      name: "一、网省沟通分析",
+      children: [
+        {
+          name: "1.1 合作意愿",
+          children: [
+            {name: "认可AI编程的战略价值"},
+            {name: "已有软著申请成功案例"},
+            {name: "愿意试点200万级项目"}
+          ]
+        },
+        {
+          name: "1.2 主要困难",
+          children: [
+            {
+              name: "技术层面",
+              children: [
+                {name: "AI生成代码质量不稳定"},
+                {name: "复杂业务逻辑处理不足"},
+                {name: "框架配置需要专业能力"}
+              ]
+            },
+            {
+              name: "人员能力",
+              children: [
+                {name: "业务理解深度不够"},
+                {name: "需求描述能力欠缺"},
+                {name: "过度依赖AI缺乏判断"}
+              ]
+            },
+            {
+              name: "工具限制",
+              children: [
+                {name: "国内AI工具能力不足"},
+                {name: "国外模型获取受限"}
+              ]
+            },
+            {
+              name: "安全风险",
+              children: [
+                {name: "直接交付存在风险"},
+                {name: "需人工把控关键环节"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      name: "二、大型科技项目梳理",
+      children: [
+        {
+          name: "2.1 AI友好型开发",
+          children: [
+            {name: "常规通用型软件模块"},
+            {name: "界面设计与交互开发"},
+            {name: "基本数据库操作"},
+            {name: "简单业务逻辑处理"}
+          ]
+        },
+        {
+          name: "2.2 非AI友好型",
+          children: [
+            {name: "复杂后端逻辑系统"},
+            {name: "多方关联数据处理"},
+            {name: "复杂业务规则引擎"},
+            {name: "高安全要求系统"}
+          ]
+        },
+        {
+          name: "2.3 业务需求分类",
+          children: [
+            {name: "算法研究与技术报告"},
+            {name: "原型系统开发"},
+            {name: "专利与软著申报"},
+            {name: "技术方案设计与论证"}
+          ]
+        }
+      ]
+    },
+    {
+      name: "三、部门长远发展路径",
+      children: [
+        {
+          name: "3.1 短期计划（试点期）",
+          children: [
+            {name: "从200万级项目入手"},
+            {name: "配置：项目经理+开发+实施"},
+            {name: "建立标书框架库"},
+            {name: "优先使用国外高级AI"}
+          ]
+        },
+        {
+          name: "3.2 中期目标（能力建设）",
+          children: [
+            {name: "提升框架配置能力"},
+            {name: "完善项目流程"},
+            {name: "积累AI辅助开发经验"}
+          ]
+        },
+        {
+          name: "3.3 远期愿景（成熟期）",
+          children: [
+            {name: "全流程AI辅助开发"},
+            {name: "超级个体+AI编程模式"},
+            {name: "实现科创团队闭环"}
+          ]
+        },
+        {
+          name: "3.4 创新落地策略",
+          children: [
+            {name: "小项目：全流程AI辅助"},
+            {name: "大项目：AI+人工协作"},
+            {name: "一揽子交付服务模式"}
+          ]
+        }
+      ]
+    },
+    {
+      name: "四、执行建议",
+      children: [
+        {
+          name: "4.1 团队组建",
+          children: [
+            {name: "强业务理解人员"},
+            {name: "AI工具熟练者"},
+            {name: "质量把控专家"}
+          ]
+        },
+        {
+          name: "4.2 能力建设",
+          children: [
+            {name: "AI提示词工程培训"},
+            {name: "业务建模能力提升"},
+            {name: "代码审查能力"}
+          ]
+        },
+        {
+          name: "4.3 风险管理",
+          children: [
+            {name: "分阶段验证AI输出"},
+            {name: "建立质量检查机制"},
+            {name: "保留人工审核节点"}
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+const payload = {
+  tool: "generate_mind_map",
+  args: {
+    data: mindMapData,
+    theme: "academy",
+    width: 1400,
+    height: 1000
+  }
+};
+
+console.log(JSON.stringify(payload));

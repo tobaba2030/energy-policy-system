@@ -1,0 +1,36 @@
+{
+  "basic_info": {
+    "total_messages": 3221,
+    "date_range": {
+      "start": "2026-03-01 17:15:12",
+      "end": "2026-05-04 13:37:28"
+    },
+    "sender_distribution": {
+      "To": 1677,
+      "From": 1544
+    }
+  },
+  "message_length": {
+    "mean": {
+      "From": 12.214378238341968,
+      "To": 17.460345855694694
+    },
+    "median": {
+      "From": 10.0,
+      "To": 14.0
+    },
+    "std": {
+      "From": 9.247936513042275,
+      "To": 26.19097082705422
+    },
+    "sum": {
+      "From": 18859,
+      "To": 29281
+    }
+  },
+  "time_analysis": {
+    "active_days": 63,
+    "total_days": 65,
+    "daily_average": 51.12698412698413
+  }
+}

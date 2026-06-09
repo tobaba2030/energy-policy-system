@@ -1,0 +1,208 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 520" width="100%">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5"
+      markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#C9A96E"
+        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <linearGradient id="headerGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a2744"/>
+      <stop offset="100%" stop-color="#0f1a2e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="680" height="520" fill="#0a1628"/>
+
+  <!-- Decorative top line -->
+  <rect x="40" y="12" width="80" height="2" fill="#C9A96E" opacity="0.6"/>
+  <rect x="130" y="12" width="20" height="2" fill="#C9A96E" opacity="0.3"/>
+
+  <!-- Title Area -->
+  <text x="340" y="48" text-anchor="middle" fill="#f0f4f8" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700">智能文献流转：</text>
+  <text x="340" y="76" text-anchor="middle" fill="#C9A96E" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600">从数据采集到知识沉淀</text>
+  <text x="340" y="100" text-anchor="middle" fill="#7a8aa8" font-family="system-ui, -apple-system, sans-serif" font-size="11">中国科技云学术智能体平台 → 腾讯IMA知识库，全流程自动化</text>
+
+  <!-- ========== STAGE 1: 数据采集 ========== -->
+  <g transform="translate(40, 120)">
+    <!-- Header -->
+    <rect x="0" y="0" width="180" height="32" rx="4" fill="url(#headerGrad)" stroke="#1e3a5f" stroke-width="0.5"/>
+    <text x="90" y="21" text-anchor="middle" fill="#C9A96E" font-family="system-ui, sans-serif" font-size="13" font-weight="600">STEP 1 智能采集</text>
+
+    <!-- Main card -->
+    <rect x="0" y="36" width="180" height="200" rx="6" fill="#0f1f3a" stroke="#1e3a5f" stroke-width="0.5"/>
+
+    <!-- Icon area -->
+    <rect x="60" y="48" width="60" height="40" rx="4" fill="#1a2744" stroke="#2a4a6f" stroke-width="0.5"/>
+    <!-- Spider/web icon -->
+    <circle cx="90" cy="62" r="10" fill="none" stroke="#4a90d9" stroke-width="1.2"/>
+    <line x1="82" y1="54" x2="98" y2="70" stroke="#4a90d9" stroke-width="0.6"/>
+    <line x1="98" y1="54" x2="82" y2="70" stroke="#4a90d9" stroke-width="0.6"/>
+    <line x1="90" y1="52" x2="90" y2="72" stroke="#4a90d9" stroke-width="0.6"/>
+    <line x1="80" y1="62" x2="100" y2="62" stroke="#4a90d9" stroke-width="0.6"/>
+    <circle cx="90" cy="62" r="2.5" fill="#4a90d9"/>
+
+    <text x="90" y="100" text-anchor="middle" fill="#a0b4d0" font-family="system-ui, sans-serif" font-size="10">中国科技云学术智能体</text>
+
+    <!-- Data points -->
+    <g transform="translate(12, 112)">
+      <rect x="0" y="0" width="156" height="28" rx="3" fill="#0a1628" stroke="#1e3a5f" stroke-width="0.5"/>
+      <text x="8" y="12" fill="#C9A96E" font-family="system-ui, sans-serif" font-size="11" font-weight="600">1000+ 数据源</text>
+      <text x="8" y="23" fill="#6a7a98" font-family="system-ui, sans-serif" font-size="9">期刊/论文/专利/报告</text>
+    </g>
+
+    <g transform="translate(12, 144)">
+      <rect x="0" y="0" width="156" height="28" rx="3" fill="#0a1628" stroke="#1e3a5f" stroke-width="0.5"/>
+      <text x="8" y="12" fill="#C9A96E" font-family="system-ui, sans-serif" font-size="11" font-weight="600">AI 智能爬取</text>
+      <text x="8" y="23" fill="#6a7a98" font-family="system-ui, sans-serif" font-size="9">自动识别、去重、分类</text>
+    </g>
+
+    <g transform="translate(12, 176)">
+      <rect x="0" y="0" width="156" height="28" rx="3" fill="#0a1628" stroke="#1e3a5f" stroke-width="0.5"/>
+      <text x="8" y="12" fill="#C9A96E" font-family="system-ui, sans-serif" font-size="11" font-weight="600">实时更新</text>
+      <text x="8" y="23" fill="#6a7a98" font-family="system-ui, sans-serif" font-size="9">每日同步最新文献</text>
+    </g>
+
+    <!-- Bottom label -->
+    <text x="90" y="215" text-anchor="middle" fill="#4a6a8a" font-family="system-ui, sans-serif" font-size="9">原始数据 → 结构化信息</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <g>
+    <rect x="228" y="235" width="32" height="24" rx="12" fill="#1a2744" stroke="#C9A96E" stroke-width="1"/>
+    <path d="M238 243 L250 243" stroke="#C9A96E" stroke-width="1.5" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- ========== STAGE 2: 自动导入IMA ========== -->
+  <g transform="translate(268, 120)">
+    <!-- Header -->
+    <rect x="0" y="0" width="180" height="32" rx="4" fill="url(#headerGrad)" stroke="#1e3a5f" stroke-width="0.5"/>
+    <text x="90" y="21" text-anchor="middle" fill="#C9A96E" font-family="system-ui, sans-serif" font-size="13" font-weight="600">STEP 2 自动导入</text>
+
+    <!-- Main card -->
+    <rect x="0" y="36" width="180" height="200" rx="6" fill="#0f1f3a" stroke="#1e3a5f" stroke-width="0.5"/>
+
+    <!-- Icon area -->
+    <rect x="60" y="48" width="60" height="40" rx="4" fill="#1a2744" stroke="#2a4a6f" stroke-width="0.5"/>
+    <!-- IMA / brain icon -->
+    <ellipse cx="90" cy="64" rx="14" ry="10" fill="none" stroke="#4a90d9" stroke-width="1.2"/>
+    <path d="M78 64 Q85 56 90 64 Q95 72 102 64" fill="none" stroke="#4a90d9" stroke-width="0.8"/>
+    <circle cx="85" cy="62" r="1.5" fill="#4a90d9"/>
+    <circle cx="95" cy="62" r="1.5" fill="#4a90d9"/>
+
+    <text x="90" y="100" text-anchor="middle" fill="#a0b4d0" font-family="system-ui, sans-serif" font-size="10">腾讯 IMA 知识库</text>
+
+    <!-- Data points -->
+    <g transform="translate(12, 112)">
+      <rect x="0" y="0" width="156" height="28" rx="3" fill="#0a1628" stroke="#1e3a5f" stroke-width="0.5"/>
+      <text x="8" y="12" fill="#C9A96E" font-family="system-ui, sans-serif" font-size="11" font-weight="600">API 无缝对接</text>
+      <text x="8" y="23" fill="#6a7a98" font-family="system-ui, sans-serif" font-size="9">一键导入，零配置</text>
+    </g>
+
+    <g transform="translate(12, 144)">
+      <rect x="0" y="0" width="156" height="28" rx="3" fill="#0a1628" stroke="#1e3a5f" stroke-width="0.5"/>
+      <text x="8" y="12" fill="#C9A96E" font-family="system-ui, sans-serif" font-size="11" font-weight="600">元数据自动提取</text>
+      <text x="8" y="23" fill="#6a7a98" font-family="system-ui, sans-serif" font-size="9">标题/作者/摘要/关键词</text>
+    </g>
+
+    <g transform="translate(12, 176)">
+      <rect x="0" y="0" width="156" height="28" rx="3" fill="#0a1628" stroke="#1e3a5f" stroke-width="0.5"/>
+      <text x="8" y="12" fill="#C9A96E" font-family="system-ui, sans-serif" font-size="11" font-weight="600">智能标签体系</text>
+      <text x="8" y="23" fill="#6a7a98" font-family="system-ui, sans-serif" font-size="9">学科/领域/方法自动归类</text>
+    </g>
+
+    <text x="90" y="215" text-anchor="middle" fill="#4a6a8a" font-family="system-ui, sans-serif" font-size="9">结构化信息 → 知识节点</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <g>
+    <rect x="456" y="235" width="32" height="24" rx="12" fill="#1a2744" stroke="#C9A96E" stroke-width="1"/>
+    <path d="M466 243 L478 243" stroke="#C9A96E" stroke-width="1.5" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- ========== STAGE 3: 智能整理与引用 ========== -->
+  <g transform="translate(496, 120)">
+    <!-- Header -->
+    <rect x="0" y="0" width="180" height="32" rx="4" fill="url(#headerGrad)" stroke="#1e3a5f" stroke-width="0.5"/>
+    <text x="90" y="21" text-anchor="middle" fill="#C9A96E" font-family="system-ui, sans-serif" font-size="13" font-weight="600">STEP 3 智能应用</text>
+
+    <!-- Main card -->
+    <rect x="0" y="36" width="180" height="200" rx="6" fill="#0f1f3a" stroke="#1e3a5f" stroke-width="0.5"/>
+
+    <!-- Icon area -->
+    <rect x="60" y="48" width="60" height="40" rx="4" fill="#1a2744" stroke="#2a4a6f" stroke-width="0.5"/>
+    <!-- Document/check icon -->
+    <rect x="80" y="54" width="20" height="24" rx="2" fill="none" stroke="#4a90d9" stroke-width="1.2"/>
+    <line x1="84" y1="60" x2="96" y2="60" stroke="#4a90d9" stroke-width="0.8"/>
+    <line x1="84" y1="64" x2="94" y2="64" stroke="#4a90d9" stroke-width="0.8"/>
+    <line x1="84" y1="68" x2="92" y2="68" stroke="#4a90d9" stroke-width="0.8"/>
+    <path d="M85 72 L88 75 L95 68" fill="none" stroke="#4a90d9" stroke-width="1"/>
+
+    <text x="90" y="100" text-anchor="middle" fill="#a0b4d0" font-family="system-ui, sans-serif" font-size="10">自动整理与引用</text>
+
+    <!-- Data points -->
+    <g transform="translate(12, 112)">
+      <rect x="0" y="0" width="156" height="28" rx="3" fill="#0a1628" stroke="#1e3a5f" stroke-width="0.5"/>
+      <text x="8" y="12" fill="#C9A96E" font-family="system-ui, sans-serif" font-size="11" font-weight="600">知识图谱构建</text>
+      <text x="8" y="23" fill="#6a7a98" font-family="system-ui, sans-serif" font-size="9">文献关联、引用网络可视化</text>
+    </g>
+
+    <g transform="translate(12, 144)">
+      <rect x="0" y="0" width="156" height="28" rx="3" fill="#0a1628" stroke="#1e3a5f" stroke-width="0.5"/>
+      <text x="8" y="12" fill="#C9A96E" font-family="system-ui, sans-serif" font-size="11" font-weight="600">智能引用生成</text>
+      <text x="8" y="23" fill="#6a7a98" font-family="system-ui, sans-serif" font-size="9">GB/T 7714 / APA 自动格式</text>
+    </g>
+
+    <g transform="translate(12, 176)">
+      <rect x="0" y="0" width="156" height="28" rx="3" fill="#0a1628" stroke="#1e3a5f" stroke-width="0.5"/>
+      <text x="8" y="12" fill="#C9A96E" font-family="system-ui, sans-serif" font-size="11" font-weight="600">写作辅助</text>
+      <text x="8" y="23" fill="#6a7a98" font-family="system-ui, sans-serif" font-size="9">段落引用、综述自动生成</text>
+    </g>
+
+    <text x="90" y="215" text-anchor="middle" fill="#4a6a8a" font-family="system-ui, sans-serif" font-size="9">知识节点 → 学术产出</text>
+  </g>
+
+  <!-- ========== BOTTOM STATS BAR ========== -->
+  <rect x="40" y="340" width="600" height="70" rx="6" fill="#0f1f3a" stroke="#1e3a5f" stroke-width="0.5"/>
+
+  <!-- Stat 1 -->
+  <text x="80" y="365" text-anchor="middle" fill="#f0f4f8" font-family="system-ui, sans-serif" font-size="16" font-weight="700">10万+</text>
+  <text x="80" y="382" text-anchor="middle" fill="#7a8aa8" font-family="system-ui, sans-serif" font-size="9">日处理文献量</text>
+
+  <line x1="150" y1="355" x2="150" y2="395" stroke="#1e3a5f" stroke-width="0.5"/>
+
+  <!-- Stat 2 -->
+  <text x="210" y="365" text-anchor="middle" fill="#f0f4f8" font-family="system-ui, sans-serif" font-size="16" font-weight="700">95%</text>
+  <text x="210" y="382" text-anchor="middle" fill="#7a8aa8" font-family="system-ui, sans-serif" font-size="9">元数据准确率</text>
+
+  <line x1="280" y1="355" x2="280" y2="395" stroke="#1e3a5f" stroke-width="0.5"/>
+
+  <!-- Stat 3 -->
+  <text x="340" y="365" text-anchor="middle" fill="#f0f4f8" font-family="system-ui, sans-serif" font-size="16" font-weight="700">&lt; 30秒</text>
+  <text x="340" y="382" text-anchor="middle" fill="#7a8aa8" font-family="system-ui, sans-serif" font-size="9">单篇导入耗时</text>
+
+  <line x1="410" y1="355" x2="410" y2="395" stroke="#1e3a5f" stroke-width="0.5"/>
+
+  <!-- Stat 4 -->
+  <text x="470" y="365" text-anchor="middle" fill="#f0f4f8" font-family="system-ui, sans-serif" font-size="16" font-weight="700">50+</text>
+  <text x="470" y="382" text-anchor="middle" fill="#7a8aa8" font-family="system-ui, sans-serif" font-size="9">引用格式标准</text>
+
+  <line x1="530" y1="355" x2="530" y2="395" stroke="#1e3a5f" stroke-width="0.5"/>
+
+  <!-- Stat 5 -->
+  <text x="585" y="365" text-anchor="middle" fill="#f0f4f8" font-family="system-ui, sans-serif" font-size="16" font-weight="700">24/7</text>
+  <text x="585" y="382" text-anchor="middle" fill="#7a8aa8" font-family="system-ui, sans-serif" font-size="9">全自动运行</text>
+
+  <!-- ========== BOTTOM QUOTE ========== -->
+  <text x="340" y="445" text-anchor="middle" fill="#C9A96E" font-family="system-ui, sans-serif" font-size="14" font-weight="600">真正的效率提升不是单点工具，而是全流程自动化</text>
+
+  <!-- Decorative bottom line -->
+  <rect x="250" y="460" width="180" height="1.5" rx="0.75" fill="#C9A96E" opacity="0.4"/>
+
+  <!-- Footer -->
+  <text x="340" y="485" text-anchor="middle" fill="#4a5a78" font-family="system-ui, sans-serif" font-size="9">中国科技云学术智能体 × 腾讯IMA知识库 | 智能学术工作流</text>
+
+  <!-- Corner decorations -->
+  <rect x="36" y="8" width="3" height="12" fill="#C9A96E" opacity="0.5"/>
+  <rect x="641" y="8" width="3" height="12" fill="#C9A96E" opacity="0.5"/>
+</svg>

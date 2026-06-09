@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+body { margin: 0; padding: 0; background: #0a1628; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const svgContent = `<svg viewBox="0 0 680 800" width="680" height="800" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#d4a843" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="#d4a843"/>
+    <stop offset="100%" stop-color="#f0c75e"/>
+  </linearGradient>
+</defs>
+
+<rect x="0" y="0" width="680" height="800" fill="#0a1628"/>
+
+<rect x="40" y="12" width="120" height="2" fill="#d4a843" opacity="0.6"/>
+<circle cx="175" cy="13" r="2" fill="#d4a843"/>
+<rect x="185" y="12" width="80" height="2" fill="#d4a843" opacity="0.3"/>
+<rect x="420" y="12" width="80" height="2" fill="#d4a843" opacity="0.3"/>
+<circle cx="510" cy="13" r="2" fill="#d4a843"/>
+<rect x="520" y="12" width="120" height="2" fill="#d4a843" opacity="0.6"/>
+
+<text x="340" y="50" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700">学术文献智能流转闭环</text>
+<text x="340" y="72" text-anchor="middle" fill="#d4a843" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="500">从人工爬取到智能报告，全流程自动化升级</text>
+
+<rect x="35" y="95" width="190" height="280" rx="8" fill="#0d1f3c" stroke="#1a3a5c" stroke-width="1"/>
+<rect x="35" y="95" width="190" height="32" rx="8" fill="#1a3a5c"/>
+<rect x="35" y="115" width="190" height="12" fill="#1a3a5c"/>
+<text x="130" y="116" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600">传统手工模式</text>
+
+<rect x="48" y="138" width="164" height="52" rx="6" fill="#0a1628" stroke="#2a4a6c" stroke-width="0.5"/>
+<text x="130" y="155" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">人工检索下载</text>
+<text x="130" y="172" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">知网/万方/科技云逐个查找</text>
+
+<rect x="48" y="198" width="164" height="52" rx="6" fill="#0a1628" stroke="#2a4a6c" stroke-width="0.5"/>
+<text x="130" y="215" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">手动整理分类</text>
+<text x="130" y="232" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">Excel表格记录，文件夹归档</text>
+
+<rect x="48" y="258" width="164" height="52" rx="6" fill="#0a1628" stroke="#2a4a6c" stroke-width="0.5"/>
+<text x="130" y="275" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">人工阅读提炼</text>
+<text x="130" y="292" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">逐篇阅读，手动写摘要笔记</text>
+
+<rect x="48" y="318" width="164" height="52" rx="6" fill="#0a1628" stroke="#2a4a6c" stroke-width="0.5"/>
+<text x="130" y="335" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">手动编写报告</text>
+<text x="130" y="352" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">Word中手动排版引用格式</text>
+
+<rect x="48" y="375" width="164" height="38" rx="6" fill="#0a1628" stroke="#3a1a1a" stroke-width="0.5"/>
+<text x="130" y="392" text-anchor="middle" fill="#e24b4a" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600">耗时 4-8 小时/10篇</text>
+<text x="130" y="406" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">效率低、易遗漏、难追溯</text>
+
+<rect x="245" y="95" width="190" height="280" rx="8" fill="#0d1f3c" stroke="#d4a843" stroke-width="1.5"/>
+<rect x="245" y="95" width="190" height="32" rx="8" fill="#d4a843"/>
+<rect x="245" y="115" width="190" height="12" fill="#d4a843"/>
+<text x="340" y="116" text-anchor="middle" fill="#0a1628" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">WorkBuddy 自动化</text>
+
+<rect x="258" y="138" width="164" height="52" rx="6" fill="#0a1628" stroke="#d4a843" stroke-width="0.5"/>
+<text x="340" y="155" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">粘贴/上传文献</text>
+<text x="340" y="172" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">PDF/链接/全文粘贴到对话框</text>
+
+<rect x="258" y="198" width="164" height="52" rx="6" fill="#0a1628" stroke="#d4a843" stroke-width="0.5"/>
+<text x="340" y="215" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">AI自动清洗提取</text>
+<text x="340" y="232" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">去重、标准化、元数据提取</text>
+
+<rect x="258" y="258" width="164" height="52" rx="6" fill="#0a1628" stroke="#d4a843" stroke-width="0.5"/>
+<text x="340" y="275" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">智能分类标签</text>
+<text x="340" y="292" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">NLP关键词提取，自动归类</text>
+
+<rect x="258" y="318" width="164" height="52" rx="6" fill="#0a1628" stroke="#d4a843" stroke-width="0.5"/>
+<text x="340" y="335" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">自动传入IMA</text>
+<text x="340" y="352" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">OpenAPI三条通道自动写入</text>
+
+<rect x="258" y="375" width="164" height="38" rx="6" fill="#0a1628" stroke="#1d9e75" stroke-width="0.5"/>
+<text x="340" y="392" text-anchor="middle" fill="#5dcaa5" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600">仅需 5 分钟/10篇</text>
+<text x="340" y="406" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">唯一手动环节：粘贴上传</text>
+
+<rect x="455" y="95" width="190" height="280" rx="8" fill="#0d1f3c" stroke="#1a3a5c" stroke-width="1"/>
+<rect x="455" y="95" width="190" height="32" rx="8" fill="#1a3a5c"/>
+<rect x="455" y="115" width="190" height="12" fill="#1a3a5c"/>
+<text x="550" y="116" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600">IMA 知识库</text>
+
+<rect x="468" y="138" width="164" height="52" rx="6" fill="#0a1628" stroke="#2a4a6c" stroke-width="0.5"/>
+<text x="550" y="155" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">文件上传通道</text>
+<text x="550" y="172" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">PDF/Word/PPT → COS存储</text>
+
+<rect x="468" y="198" width="164" height="52" rx="6" fill="#0a1628" stroke="#2a4a6c" stroke-width="0.5"/>
+<text x="550" y="215" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">URL导入通道</text>
+<text x="550" y="232" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">在线论文链接一键收录</text>
+
+<rect x="468" y="258" width="164" height="52" rx="6" fill="#0a1628" stroke="#2a4a6c" stroke-width="0.5"/>
+<text x="550" y="275" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">笔记创建通道</text>
+<text x="550" y="292" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">Markdown综述笔记自动写入</text>
+
+<rect x="468" y="318" width="164" height="52" rx="6" fill="#0a1628" stroke="#2a4a6c" stroke-width="0.5"/>
+<text x="550" y="335" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">结构化文献库</text>
+<text x="550" y="352" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">可搜索、可引用、可追溯</text>
+
+<rect x="468" y="375" width="164" height="38" rx="6" fill="#0a1628" stroke="#1d9e75" stroke-width="0.5"/>
+<text x="550" y="392" text-anchor="middle" fill="#5dcaa5" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600">全自动入库，零人工</text>
+<text x="550" y="406" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">三种通道适配所有文献类型</text>
+
+<path d="M225 235 L245 235" fill="none" stroke="#d4a843" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M435 235 L455 235" fill="none" stroke="#d4a843" stroke-width="2" marker-end="url(#arrow)"/>
+
+<rect x="35" y="395" width="610" height="8" rx="4" fill="url(#goldGrad)" opacity="0.3"/>
+
+<text x="340" y="430" text-anchor="middle" fill="#d4a843" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700">闭环回流：WorkBuddy 反向调用 IMA 知识库</text>
+
+<rect x="45" y="450" width="135" height="90" rx="8" fill="#0d1f3c" stroke="#d4a843" stroke-width="1"/>
+<circle cx="65" cy="468" r="12" fill="#d4a843"/>
+<text x="65" y="472" text-anchor="middle" fill="#0a1628" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700">1</text>
+<text x="112" y="472" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">发起分析请求</text>
+<text x="112" y="495" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">"帮我分析虚拟电厂</text>
+<text x="112" y="508" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">最新研究进展"</text>
+<text x="112" y="525" text-anchor="middle" fill="#5dcaa5" font-family="system-ui, -apple-system, sans-serif" font-size="8">WorkBuddy接收指令</text>
+
+<path d="M180 495 L210 495" fill="none" stroke="#d4a843" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="215" y="450" width="135" height="90" rx="8" fill="#0d1f3c" stroke="#d4a843" stroke-width="1"/>
+<circle cx="235" cy="468" r="12" fill="#d4a843"/>
+<text x="235" y="472" text-anchor="middle" fill="#0a1628" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700">2</text>
+<text x="282" y="472" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">检索IMA知识库</text>
+<text x="282" y="495" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">自动搜索知识库中</text>
+<text x="282" y="508" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">相关文献与笔记</text>
+<text x="282" y="525" text-anchor="middle" fill="#5dcaa5" font-family="system-ui, -apple-system, sans-serif" font-size="8">IMA OpenAPI查询</text>
+
+<path d="M350 495 L380 495" fill="none" stroke="#d4a843" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="385" y="450" width="135" height="90" rx="8" fill="#0d1f3c" stroke="#d4a843" stroke-width="1"/>
+<circle cx="405" cy="468" r="12" fill="#d4a843"/>
+<text x="405" y="472" text-anchor="middle" fill="#0a1628" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700">3</text>
+<text x="452" y="472" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">AI分析整合</text>
+<text x="452" y="495" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">多文献交叉分析</text>
+<text x="452" y="508" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">提炼观点与趋势</text>
+<text x="452" y="525" text-anchor="middle" fill="#5dcaa5" font-family="system-ui, -apple-system, sans-serif" font-size="8">WorkBuddy智能处理</text>
+
+<path d="M520 495 L550 495" fill="none" stroke="#d4a843" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="555" y="450" width="110" height="90" rx="8" fill="#0d1f3c" stroke="#d4a843" stroke-width="1"/>
+<circle cx="575" cy="468" r="12" fill="#d4a843"/>
+<text x="575" y="472" text-anchor="middle" fill="#0a1628" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700">4</text>
+<text x="610" y="472" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">输出报告</text>
+<text x="610" y="495" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">技术报告</text>
+<text x="610" y="508" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">文献综述</text>
+<text x="610" y="525" text-anchor="middle" fill="#5dcaa5" font-family="system-ui, -apple-system, sans-serif" font-size="8">含自动引用格式</text>
+
+<path d="M610 540 L610 560 L340 560 L340 385" fill="none" stroke="#d4a843" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+<text x="460" y="555" text-anchor="middle" fill="#d4a843" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-style="italic">持续积累，知识库越用越智能</text>
+
+<rect x="35" y="575" width="610" height="100" rx="8" fill="#0d1f3c" stroke="#1a3a5c" stroke-width="1"/>
+
+<rect x="55" y="590" width="100" height="70" rx="6" fill="#0a1628" stroke="#2a4a6c" stroke-width="0.5"/>
+<text x="105" y="610" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700">10x</text>
+<text x="105" y="628" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">效率提升</text>
+<text x="105" y="642" text-anchor="middle" fill="#5dcaa5" font-family="system-ui, -apple-system, sans-serif" font-size="8">从8小时→30分钟</text>
+
+<rect x="170" y="590" width="100" height="70" rx="6" fill="#0a1628" stroke="#2a4a6c" stroke-width="0.5"/>
+<text x="220" y="610" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700">100%</text>
+<text x="220" y="628" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">引用可追溯</text>
+<text x="220" y="642" text-anchor="middle" fill="#5dcaa5" font-family="system-ui, -apple-system, sans-serif" font-size="8">GB/T 7714标准格式</text>
+
+<rect x="285" y="590" width="100" height="70" rx="6" fill="#0a1628" stroke="#2a4a6c" stroke-width="0.5"/>
+<text x="335" y="610" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700">3</text>
+<text x="335" y="628" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">自动导入通道</text>
+<text x="335" y="642" text-anchor="middle" fill="#5dcaa5" font-family="system-ui, -apple-system, sans-serif" font-size="8">文件/URL/笔记全覆盖</text>
+
+<rect x="400" y="590" width="100" height="70" rx="6" fill="#0a1628" stroke="#2a4a6c" stroke-width="0.5"/>
+<text x="450" y="610" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700">0</text>
+<text x="450" y="628" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">手动整理环节</text>
+<text x="450" y="642" text-anchor="middle" fill="#5dcaa5" font-family="system-ui, -apple-system, sans-serif" font-size="8">粘贴后全自动处理</text>
+
+<rect x="515" y="590" width="110" height="70" rx="6" fill="#0a1628" stroke="#2a4a6c" stroke-width="0.5"/>
+<text x="570" y="610" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700">闭环</text>
+<text x="570" y="628" text-anchor="middle" fill="#8ba4be" font-family="system-ui, -apple-system, sans-serif" font-size="9">知识库持续积累</text>
+<text x="570" y="642" text-anchor="middle" fill="#5dcaa5" font-family="system-ui, -apple-system, sans-serif" font-size="8">分析→报告→再入库</text>
+
+<rect x="35" y="690" width="610" height="42" rx="8" fill="#d4a843" opacity="0.15" stroke="#d4a843" stroke-width="0.5"/>
+<text x="340" y="717" text-anchor="middle" fill="#d4a843" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600">真正的变化不是工具，而是工作流的重新定义</text>
+
+<text x="340" y="750" text-anchor="middle" fill="#5a7a9a" font-family="system-ui, -apple-system, sans-serif" font-size="10">适用场景：电网科技项目研究 | 技术报告编写 | 专利文献调研 | 学术论文综述</text>
+
+<rect x="250" y="770" width="180" height="1" fill="#d4a843" opacity="0.3"/>
+<text x="340" y="785" text-anchor="middle" fill="#4a6a8a" font-family="system-ui, -apple-system, sans-serif" font-size="9">WorkBuddy x IMA 知识库联动方案</text>
+
+</svg>`;
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width = 1360;
+canvas.height = 1600;
+
+const img = new Image();
+const blob = new Blob([svgContent], {type: 'image/svg+xml;charset=utf-8'});
+const url = URL.createObjectURL(blob);
+
+img.onload = function() {
+  ctx.fillStyle = '#0a1628';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  URL.revokeObjectURL(url);
+  document.title = 'READY';
+};
+img.src = url;
+</script>
+</body>
+</html>

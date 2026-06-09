@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电网科创业务中心 · 科技项目AI实践进展汇报</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #F7F6F3; color: #1a1a1a; line-height: 1.7; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+
+  .header { text-align: center; margin-bottom: 40px; padding: 48px 24px; background: linear-gradient(135deg, #3C3489 0%, #534AB7 50%, #7F77DD 100%); border-radius: 16px; color: #fff; }
+  .header h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; letter-spacing: 1px; }
+  .header .subtitle { font-size: 15px; opacity: 0.85; }
+  .header .meta { margin-top: 16px; font-size: 13px; opacity: 0.7; }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 36px; }
+  .kpi-card { background: #fff; border-radius: 12px; padding: 20px 16px; text-align: center; border: 1px solid #E8E6E0; transition: transform 0.2s; }
+  .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .kpi-number { font-size: 36px; font-weight: 700; line-height: 1.2; }
+  .kpi-label { font-size: 13px; color: #666; margin-top: 4px; }
+  .kpi-sub { font-size: 11px; color: #999; margin-top: 2px; }
+
+  .section { margin-bottom: 32px; }
+  .section-title { font-size: 20px; font-weight: 600; margin-bottom: 16px; padding-left: 12px; border-left: 4px solid #534AB7; }
+  .section-title.blue { border-left-color: #185FA5; }
+  .section-title.teal { border-left-color: #0F6E56; }
+  .section-title.coral { border-left-color: #993C1D; }
+  .section-title.amber { border-left-color: #854F0B; }
+  .section-title.pink { border-left-color: #993556; }
+
+  .card { background: #fff; border-radius: 12px; padding: 24px; border: 1px solid #E8E6E0; margin-bottom: 16px; }
+  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .card-title { font-size: 16px; font-weight: 600; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+  .badge-done { background: #E1F5EE; color: #085041; }
+  .badge-wip { background: #FAEEDA; color: #633806; }
+  .badge-blocked { background: #FAECE7; color: #712B13; }
+  .badge-plan { background: #E6F1FB; color: #0C447C; }
+
+  .progress-bar { height: 8px; background: #F1EFE8; border-radius: 4px; margin: 8px 0; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { background: #F1EFE8; padding: 10px 12px; text-align: left; font-weight: 500; font-size: 13px; color: #444; }
+  td { padding: 10px 12px; border-bottom: 1px solid #E8E6E0; }
+  tr:hover td { background: #FAFAF8; }
+
+  .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .tag { padding: 2px 8px; border-radius: 4px; font-size: 12px; background: #EEEDFE; color: #3C3489; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .risk-item { display: flex; gap: 12px; padding: 12px; border-radius: 8px; background: #FAFAF8; margin-bottom: 8px; }
+  .risk-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .risk-content h4 { font-size: 14px; font-weight: 500; }
+  .risk-content p { font-size: 13px; color: #666; margin-top: 2px; }
+
+  .timeline { position: relative; padding-left: 24px; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: #D3D1C7; }
+  .timeline-item { position: relative; margin-bottom: 20px; }
+  .timeline-item::before { content: ''; position: absolute; left: -20px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: #534AB7; border: 2px solid #fff; }
+  .timeline-date { font-size: 12px; color: #888; }
+  .timeline-title { font-size: 14px; font-weight: 500; }
+  .timeline-desc { font-size: 13px; color: #666; }
+
+  .footer { text-align: center; padding: 32px 0; font-size: 12px; color: #999; }
+
+  @media (max-width: 768px) {
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>电网科创业务中心 · 科技项目AI实践进展汇报</h1>
+    <div class="subtitle">5大领域 · 12+项目 · 全流程AI赋能</div>
+    <div class="meta">汇报时间：2026年6月7日 | 汇报范围：贵州/云南/新疆/山东/广东</div>
+  </div>
+
+  <!-- KPI 概览 -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-number" style="color:#0C447C;">140</div>
+      <div class="kpi-label">规则库规则数</div>
+      <div class="kpi-sub">单元87 + 设备34 + 台区19</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-number" style="color:#085041;">9</div>
+      <div class="kpi-label">已提交专利</div>
+      <div class="kpi-sub">南网AI虚拟电厂项目</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-number" style="color:#993C1D;">5</div>
+      <div class="kpi-label">覆盖省份</div>
+      <div class="kpi-sub">黔/滇/新/鲁/粤</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-number" style="color:#633806;">12</div>
+      <div class="kpi-label">团队成员</div>
+      <div class="kpi-sub">1统筹+2A+3B+6C</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-number" style="color:#72243E;">3</div>
+      <div class="kpi-label">AI工具链</div>
+      <div class="kpi-sub">WorkBuddy/ima/imag2-ppt</div>
+    </div>
+  </div>
+
+  <!-- 领域一：AI+技术研究 -->
+  <div class="section">
+    <div class="section-title blue">一、AI+技术研究 —— 终端/表计故障诊断与规则库</div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">终端和表计故障类型与健康状态评估规则库设计</span>
+        <span class="badge badge-wip">进行中</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:75%;background:#185FA5;"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:#888;"><span>完成度 75%</span><span>目标：技术报告交付</span></div>
+
+      <table style="margin-top:16px;">
+        <thead>
+          <tr><th>层级</th><th>规则数</th><th>核心技术</th><th>进展状态</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>单元级</td><td style="font-weight:600;">87条</td><td>68维特征矩阵 / PCA-tSNE降维 / CAE自编码器</td><td><span class="badge badge-done">已完成</span></td></tr>
+          <tr><td>设备级</td><td style="font-weight:600;">34条</td><td>Apriori / FP-Growth关联挖掘 / CHI健康指数</td><td><span class="badge badge-wip">进行中</span></td></tr>
+          <tr><td>台区级</td><td style="font-weight:600;">19条</td><td>Arrhenius退化模型 / 多层评估体系</td><td><span class="badge badge-plan">规划中</span></td></tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top:16px;">
+        <strong>关键产出：</strong>
+        <ul style="margin-left:20px;margin-top:4px;font-size:14px;">
+          <li>技术报告（gen_full_report.js 自动生成，目标100+页/5万字）已产出初版1.35MB docx</li>
+          <li>22张技术图表嵌入（matplotlib生成，含CHI模型、特征分布、关联规则可视化等）</li>
+          <li>6章结构 + 20篇参考文献 + 3个附录完整框架</li>
+        </ul>
+      </div>
+      <div class="tag-list" style="margin-top:12px;">
+        <span class="tag">docx-js</span><span class="tag">CHI健康指数</span><span class="tag">Arrhenius模型</span><span class="tag">68维特征矩阵</span><span class="tag">PCA/t-SNE/CAE</span><span class="tag">Apriori/FP-Growth</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 领域二：虚拟电厂 -->
+  <div class="section">
+    <div class="section-title teal">二、虚拟电厂与新型电力系统</div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">南网AI虚拟电厂项目</span>
+          <span class="badge badge-done">专利已提交</span>
+        </div>
+        <div style="margin-top:8px;">
+          <p style="font-size:14px;"><strong>9份专利</strong>已提交，覆盖：</p>
+          <ul style="margin-left:20px;font-size:14px;margin-top:4px;">
+            <li>AI驱动的虚拟电厂调度优化</li>
+            <li>负荷预测与需求响应</li>
+            <li>分布式资源聚合控制</li>
+            <li>负控终端智能管理</li>
+          </ul>
+        </div>
+        <div class="tag-list" style="margin-top:12px;">
+          <span class="tag">AI调度</span><span class="tag">需求响应</span><span class="tag">负控</span><span class="tag">分布式聚合</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">虚拟电厂技术学习资料</span>
+          <span class="badge badge-blocked">待推进</span>
+        </div>
+        <div style="margin-top:8px;">
+          <p style="font-size:14px;">南方电网《虚拟电厂技术的探索与实践》</p>
+          <ul style="margin-left:20px;font-size:14px;margin-top:4px;">
+            <li>原始PPT（截图格式，不可编辑）</li>
+            <li>PDF版本已存档</li>
+            <li>需转换为可编辑版本（保留原技术框架、图片和风格）</li>
+          </ul>
+          <p style="font-size:13px;color:#993C1D;margin-top:8px;">上次尝试AI响应偏差，需重新生成</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 领域三：AI工具链 -->
+  <div class="section">
+    <div class="section-title coral">三、AI工具链与自动化</div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr><th>工具/系统</th><th>用途</th><th>自动化程度</th><th>进展</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>WorkBuddy</strong></td>
+            <td>AI对话/文档生成/代码编写/多模态</td>
+            <td><span class="badge badge-wip">部分自动化</span></td>
+            <td>日常使用，技术报告自动生成脚本已就绪</td>
+          </tr>
+          <tr>
+            <td><strong>腾讯ima</strong></td>
+            <td>知识库管理/资料归档/团队知识沉淀</td>
+            <td><span class="badge badge-wip">集成中</span></td>
+            <td>知识库运营，待与WorkBuddy深度打通</td>
+          </tr>
+          <tr>
+            <td><strong>imag2-ppt</strong></td>
+            <td>PPT图像增强/可视化呈现</td>
+            <td><span class="badge badge-done">已就绪</span></td>
+            <td>技术报告/PPT材料增强</td>
+          </tr>
+          <tr>
+            <td><strong>马丁策略模型</strong></td>
+            <td>Martin Zweig七因子A股筛选</td>
+            <td><span class="badge badge-wip">待验证</span></td>
+            <td>自动任务已创建（每周日12:00），首次运行待确认</td>
+          </tr>
+          <tr>
+            <td><strong>周报HTML分发</strong></td>
+            <td>邮件兼容HTML格式周报</td>
+            <td><span class="badge badge-done">已上线</span></td>
+            <td>内联样式+表格布局，追加式内容管理</td>
+          </tr>
+          <tr>
+            <td><strong>钉钉集成</strong></td>
+            <td>消息/群聊/文档/待办</td>
+            <td><span class="badge badge-plan">规划中</span></td>
+            <td>已连接，非管理员权限，待场景深化</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Word文档自动生成脚本</span>
+        <span class="badge badge-done">核心功能就绪</span>
+      </div>
+      <div style="margin-top:8px;font-size:14px;">
+        <p>基于 docx-js 的技术报告自动生成脚本（gen_full_report.js），支持：</p>
+        <ul style="margin-left:20px;margin-top:4px;">
+          <li>6章结构化报告自动生成（封面 + 摘要 + 正文 + 参考文献 + 附录）</li>
+          <li>22张matplotlib图表自动嵌入</li>
+          <li>5万字/100+页目标，已产出初版1.35MB</li>
+          <li>脚本持续迭代：gen_full_v3.js 扩展第3-6章</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 领域四：IDP -->
+  <div class="section">
+    <div class="section-title amber">四、IDP个人发展计划与团队赋能</div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">AI专项IDP项目落地执行</span>
+        <span class="badge badge-wip">开发中</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:60%;background:#854F0B;"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:#888;"><span>完成度 60%</span><span>目标：可视化系统上线</span></div>
+
+      <div style="margin-top:16px;">
+        <table>
+          <thead>
+            <tr><th>模块</th><th>描述</th><th>状态</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>idp_v3.html</td><td>IDP可视化页面（v3版本）</td><td><span class="badge badge-wip">开发中</span></td></tr>
+            <tr><td>团队架构</td><td>1统筹+2A+3B+6C角色配置</td><td><span class="badge badge-done">已确定</span></td></tr>
+            <tr><td>区域覆盖</td><td>贵州/云南/新疆/山东/广东</td><td><span class="badge badge-done">已覆盖</span></td></tr>
+            <tr><td>个人发展画像</td><td>AI辅助能力评估与成长路径</td><td><span class="badge badge-plan">规划中</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 领域五：内容生成 -->
+  <div class="section">
+    <div class="section-title pink">五、内容生成与多模态实践</div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr><th>场景</th><th>产出物</th><th>AI能力</th><th>状态</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>技术研究报告</td><td>docx (100+页)</td><td>docx-js自动生成 + matplotlib图表</td><td><span class="badge badge-wip">初版已出</span></td></tr>
+          <tr><td>申报简表/可研报告</td><td>docx/pdf</td><td>模板化自动填充</td><td><span class="badge badge-done">日常使用</span></td></tr>
+          <tr><td>虚拟电厂PPT</td><td>pptx</td><td>截图→可编辑转换</td><td><span class="badge badge-blocked">待重做</span></td></tr>
+          <tr><td>周报分发</td><td>HTML邮件</td><td>内联样式+表格布局</td><td><span class="badge badge-done">已上线</span></td></tr>
+          <tr><td>健康讲座视频</td><td>mp4</td><td>AI配音+文采文字</td><td><span class="badge badge-done">已完成</span></td></tr>
+          <tr><td>专利撰写</td><td>9份专利文档</td><td>AI辅助框架+内容生成</td><td><span class="badge badge-done">已提交</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 风险与待办 -->
+  <div class="section">
+    <div class="section-title" style="border-left-color:#A32D2D;">风险与关键待办</div>
+
+    <div class="two-col">
+      <div>
+        <h3 style="font-size:15px;font-weight:500;margin-bottom:12px;">风险项</h3>
+        <div class="risk-item">
+          <div class="risk-icon" style="background:#FAECE7;color:#712B13;">!</div>
+          <div class="risk-content">
+            <h4>技术报告页数/字数可能不达标</h4>
+            <p>初版1.35MB，需验证是否达到100+页/5万字目标</p>
+          </div>
+        </div>
+        <div class="risk-item">
+          <div class="risk-icon" style="background:#FAECE7;color:#712B13;">!</div>
+          <div class="risk-content">
+            <h4>虚拟电厂PPT转换偏差</h4>
+            <p>上次AI生成内容与需求不匹配，需重新生成可编辑版本</p>
+          </div>
+        </div>
+        <div class="risk-item">
+          <div class="risk-icon" style="background:#FAEEDA;color:#633806;">~</div>
+          <div class="risk-content">
+            <h4>马丁策略首次运行待验证</h4>
+            <p>自动化任务已创建但首次执行结果待确认，模型回测未完成</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:15px;font-weight:500;margin-bottom:12px;">关键待办（优先级排序）</h3>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-date">P0 - 本周</div>
+            <div class="timeline-title">技术报告页数/字数达标验证</div>
+            <div class="timeline-desc">检查docx页数和字数，不足则补充第3-6章内容</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">P0 - 本周</div>
+            <div class="timeline-title">虚拟电厂PPT可编辑版本重做</div>
+            <div class="timeline-desc">保留原技术框架、图片和风格，生成可编辑PPT</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">P1 - 近两周</div>
+            <div class="timeline-title">IDP可视化系统(idp_v3.html)上线</div>
+            <div class="timeline-desc">完成v3版开发，部署并团队试用</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">P1 - 近两周</div>
+            <div class="timeline-title">马丁策略首次运行验证</div>
+            <div class="timeline-desc">确认周日自动执行结果，调整因子权重</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">P2 - 本月</div>
+            <div class="timeline-title">WorkBuddy与钉钉深度集成</div>
+            <div class="timeline-desc">推进消息通知、待办同步等场景</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 总结 -->
+  <div class="section">
+    <div class="card" style="background:linear-gradient(135deg,#EEEDFE,#E1F5EE);border:none;">
+      <div style="text-align:center;">
+        <h2 style="font-size:18px;font-weight:600;margin-bottom:12px;">总结与展望</h2>
+        <p style="font-size:14px;max-width:800px;margin:0 auto;line-height:1.8;">
+          电网科创业务中心AI实践已覆盖<strong>技术研究、新型电力系统、工具链自动化、团队赋能、内容生成</strong>5大领域，核心指标亮眼（140条规则库/9份专利/5省覆盖）。当前关键瓶颈集中在<strong>技术报告达标验证、PPT转换重做、IDP系统上线</strong>三项，建议按P0→P1→P2优先级推进。下一阶段重点：完成所有在研项目交付，深化WorkBuddy+钉钉+ima工具链打通，探索AI在项目申报/策划/执行全流程的深度嵌入。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    电网科创业务中心 | AI实践进展汇报 | 2026.06.07 | WorkBuddy自动生成
+  </div>
+
+</div>
+</body>
+</html>
