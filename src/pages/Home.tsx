@@ -1,4 +1,5 @@
 import { FileText, Globe, TrendingUp, AlertTriangle, BarChart3, Zap, Network, Bot } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { policies, scenarios } from '@/data/policyData';
 import InformationCycle from '@/components/InformationCycle';
 
@@ -68,20 +69,20 @@ export default function HomePage() {
             <h1 className="text-4xl font-bold mb-4">能源政策情报影响研究与仿真推演系统</h1>
             <p className="text-xl text-blue-100 mb-8">基于AI大模型技术，为能源集团提供政策情报分析与3060双碳政策沙盘推演能力</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="/policy"
+              <Link
+                to="/policy"
                 className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white text-blue-600 font-medium rounded-lg hover:bg-blue-50 transition-colors"
               >
                 <FileText className="w-5 h-5" />
                 政策情报分析
-              </a>
-              <a
-                href="/sandbox"
+              </Link>
+              <Link
+                to="/sandbox"
                 className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-transparent border-2 border-white text-white font-medium rounded-lg hover:bg-white/10 transition-colors"
               >
                 <Globe className="w-5 h-5" />
                 沙盘推演
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -128,15 +129,15 @@ export default function HomePage() {
                 <div className="p-5">
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">{feature.title}</h3>
                   <p className="text-gray-600 text-sm mb-3">{feature.description}</p>
-                  <a
-                    href={feature.link}
+                  <Link
+                    to={feature.link}
                     className="inline-flex items-center gap-2 text-blue-600 font-medium hover:text-blue-700 text-sm"
                   >
                     了解更多
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -151,12 +152,12 @@ export default function HomePage() {
               <h2 className="text-2xl font-bold text-gray-800 mb-2">最新政策动态</h2>
               <p className="text-gray-600">实时追踪国家及地方能源政策发布</p>
             </div>
-            <a href="/policy" className="inline-flex items-center gap-2 text-blue-600 font-medium hover:text-blue-700">
+            <Link to="/policy" className="inline-flex items-center gap-2 text-blue-600 font-medium hover:text-blue-700">
               查看全部
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-            </a>
+            </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {recentPolicies.map(policy => (

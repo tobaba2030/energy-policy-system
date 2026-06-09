@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Menu, X, FileText, Globe, Home, Network, Bot, BookOpen, FolderOpen, ChevronDown } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const navItems = [
   { path: '/', label: '首页', icon: Home },
@@ -26,18 +26,18 @@ export default function Navbar() {
     <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-2">
         <div className="flex items-center justify-between h-14">
-          <a href="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg flex items-center justify-center">
               <Globe className="w-5 h-5 text-white" />
             </div>
             <span className="font-bold text-lg text-gray-800 hidden sm:block">能源政策情报系统</span>
-          </a>
+          </Link>
 
           <div className="hidden md:flex items-center">
             {navItems.map(item => (
-              <a
+              <Link
                 key={item.path}
-                href={item.path}
+                to={item.path}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-colors ${
                   location.pathname === item.path
                     ? 'bg-blue-50 text-blue-600 font-medium'
@@ -46,7 +46,7 @@ export default function Navbar() {
               >
                 <item.icon className="w-4 h-4" />
                 <span>{item.label}</span>
-              </a>
+              </Link>
             ))}
 
             <div className="relative ml-2">
@@ -65,9 +65,9 @@ export default function Navbar() {
               {showDropdown && (
                 <div className="absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
                   {moreItems.map(item => (
-                    <a
+                    <Link
                       key={item.path}
-                      href={item.path}
+                      to={item.path}
                       onClick={() => setShowDropdown(false)}
                       className={`flex items-center gap-2 px-3 py-2 text-sm transition-colors ${
                         location.pathname === item.path
@@ -77,7 +77,7 @@ export default function Navbar() {
                     >
                       <item.icon className="w-4 h-4" />
                       <span>{item.label}</span>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -86,9 +86,9 @@ export default function Navbar() {
 
           <div className="hidden sm:flex md:hidden items-center gap-1">
             {allItems.map(item => (
-              <a
+              <Link
                 key={item.path}
-                href={item.path}
+                to={item.path}
                 className={`p-2 rounded-lg transition-colors ${
                   location.pathname === item.path
                     ? 'bg-blue-50 text-blue-600'
@@ -97,7 +97,7 @@ export default function Navbar() {
                 title={item.label}
               >
                 <item.icon className="w-5 h-5" />
-              </a>
+              </Link>
             ))}
           </div>
 
@@ -112,9 +112,9 @@ export default function Navbar() {
         {isOpen && (
           <div className="sm:hidden py-3 border-t">
             {allItems.map(item => (
-              <a
+              <Link
                 key={item.path}
-                href={item.path}
+                to={item.path}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
                   location.pathname === item.path
                     ? 'bg-blue-50 text-blue-600 font-medium'
@@ -124,7 +124,7 @@ export default function Navbar() {
               >
                 <item.icon className="w-5 h-5" />
                 <span>{item.label}</span>
-              </a>
+              </Link>
             ))}
           </div>
         )}

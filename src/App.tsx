@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import PolicyIntelligence from '@/pages/PolicyIntelligence';
 import CarbonSandbox from '@/pages/CarbonSandbox';
