@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FileText, Clock, CheckCircle, RefreshCw, Download, Bell, Filter, BookOpen, Layers, Target } from 'lucide-react';
-import { ReportLevel, reportLevels, businessSegments, policyBusinessImpacts, businessMetrics } from '@/data/businessImpactData';
+import { reportLevels, businessSegments, policyImpacts, businessMetricHistory } from '@/data/businessImpactData';
 import BusinessImpactAnalysis from '@/components/BusinessImpactAnalysis';
 import PolicyBusinessMatrix from '@/components/PolicyBusinessMatrix';
 import BusinessMetricsChart from '@/components/BusinessMetricsChart';
@@ -189,8 +189,7 @@ export default function PolicyResearch() {
 
             <div className="bg-white rounded-xl shadow-sm p-6">
               <PolicyBusinessMatrix
-                impacts={policyBusinessImpacts}
-                segments={businessSegments.map(s => ({ id: s.id, name: s.name }))}
+                impacts={policyImpacts}
               />
             </div>
           </div>
@@ -253,7 +252,7 @@ export default function PolicyResearch() {
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <h3 className="font-semibold text-gray-800 mb-4">{segment.name}指标趋势</h3>
                 <BusinessMetricsChart
-                  data={businessMetrics}
+                  data={businessMetricHistory}
                   segmentId={selectedSegment}
                 />
               </div>

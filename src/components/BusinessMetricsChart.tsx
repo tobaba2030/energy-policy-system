@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
-import { BusinessMetrics } from '@/data/businessImpactData';
+import { BusinessMetricData } from '@/data/businessImpactData';
 
 interface BusinessMetricsChartProps {
-  data: BusinessMetrics[];
+  data: BusinessMetricData[];
   segmentId: string;
   yearRange?: { min: number; max: number };
 }

@@ -1,12 +1,13 @@
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import PolicyIntelligence from '@/pages/PolicyIntelligence';
-import CarbonSandbox from '@/pages/CarbonSandbox';
 import HomePage from '@/pages/Home';
 import KnowledgeGraph from '@/pages/KnowledgeGraph';
 import AgentInference from '@/pages/AgentInference';
 import PolicyResearch from '@/pages/PolicyResearch';
 import FileManagement from '@/pages/FileManagement';
+import BusinessSimulation from '@/pages/BusinessSimulation';
+import BusinessImpactAnalysis from '@/pages/BusinessImpactAnalysis';
 
 function AppContent() {
   return (
@@ -15,7 +16,8 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/policy" element={<PolicyIntelligence />} />
-        <Route path="/sandbox" element={<CarbonSandbox />} />
+        <Route path="/impact" element={<BusinessImpactAnalysis />} />
+        <Route path="/simulation" element={<BusinessSimulation />} />
         <Route path="/knowledge" element={<KnowledgeGraph />} />
         <Route path="/agent" element={<AgentInference />} />
         <Route path="/research" element={<PolicyResearch />} />

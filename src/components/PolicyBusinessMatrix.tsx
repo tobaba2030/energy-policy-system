@@ -4,12 +4,15 @@ import { PolicyImpact, businessSegments } from '@/data/businessImpactData';
 
 interface PolicyBusinessMatrixProps {
   impacts: PolicyImpact[];
-  segments: { id: string; name: string }[];
+  segments?: { id: string; name: string }[];
 }
 
 export default function PolicyBusinessMatrix({ impacts, segments }: PolicyBusinessMatrixProps) {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
+  
+  // 使用传入的segments或默认使用businessSegments
+  const displaySegments = segments || businessSegments.map(s => ({ id: s.id, name: s.name }));
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -19,11 +22,11 @@ export default function PolicyBusinessMatrix({ impacts, segments }: PolicyBusine
     }
 
     const policies = impacts.map(i => i.policyTitle.length > 15 ? i.policyTitle.substring(0, 15) + '...' : i.policyTitle);
-    const segmentNames = segments.map(s => s.name);
+    const segmentNames = displaySegments.map(s => s.name);
 
     const heatmapData: number[][] = [];
     impacts.forEach((impact, policyIndex) => {
-      segments.forEach((segment, segmentIndex) => {
+      displaySegments.forEach((segment, segmentIndex) => {
         const segmentImpact = impact.segments.find(s => s.segmentId === segment.id);
         if (segmentImpact) {
           heatmapData.push([segmentIndex, policyIndex, segmentImpact.impactScore]);
@@ -46,11 +49,11 @@ export default function PolicyBusinessMatrix({ impacts, segments }: PolicyBusine
         formatter: (params: any) => {
           const [xIndex, yIndex, value] = params.data;
           const impact = impacts[yIndex].segments.find(
-            s => s.segmentId === segments[xIndex].id
+            s => s.segmentId === displaySegments[xIndex].id
           );
           return `
             <div style="font-weight: bold; margin-bottom: 4px;">${impacts[yIndex].policyTitle}</div>
-            <div style="margin-bottom: 4px;">${segments[xIndex].name}</div>
+            <div style="margin-bottom: 4px;">${displaySegments[xIndex].name}</div>
             <div style="color: ${value > 0 ? '#22c55e' : value < 0 ? '#ef4444' : '#6b7280'}">
               影响得分: ${value}
             </div>

@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Menu, X, FileText, Globe, Home, Network, Bot, BookOpen, FolderOpen, ChevronDown } from 'lucide-react';
+import { Menu, X, FileText, Globe, Home, Network, Bot, BookOpen, FolderOpen, ChevronDown, TrendingUp, BarChart3 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const navItems = [
   { path: '/', label: '首页', icon: Home },
   { path: '/policy', label: '政策情报', icon: FileText },
-  { path: '/sandbox', label: '沙盘推演', icon: Globe },
+  { path: '/impact', label: '业务影响分析', icon: BarChart3 },
+  { path: '/simulation', label: '推演工作台', icon: TrendingUp },
   { path: '/knowledge', label: '知识图谱', icon: Network },
 ];
 

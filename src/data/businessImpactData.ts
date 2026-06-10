@@ -1,15 +1,553 @@
-export interface BusinessSegment {
+/**
+ * 湖北能源集团政策情报对业务影响研究与推演系统
+ * 核心数据模型 V2.0
+ * 重点：政策对业务板块的即时、中期影响研究与量化推演
+ */
+
+// ==================== 业务板块定义 ====================
+export type BusinessUnit = 'hydro' | 'thermal' | 'renewable' | 'gas' | 'comprehensive' | 'carbon';
+
+export const BusinessUnitLabels: Record<BusinessUnit, string> = {
+  hydro: '水电板块',
+  thermal: '火电板块',
+  renewable: '新能源板块',
+  gas: '天然气板块',
+  comprehensive: '综合能源',
+  carbon: '碳资产'
+};
+
+// ==================== 影响类型定义 ====================
+export type ImpactType = 'price_volume' | 'cost' | 'investment' | 'subsidy';
+
+export const ImpactTypeLabels: Record<ImpactType, string> = {
+  price_volume: '量价影响',
+  cost: '成本影响',
+  investment: '准入与投资',
+  subsidy: '补贴与收益'
+};
+
+// ==================== 影响时效定义 ====================
+export type ImpactTiming = 'immediate' | 'short_term' | 'medium_term' | 'long_term';
+
+export const ImpactTimingLabels: Record<ImpactTiming, string> = {
+  immediate: '立即生效（1个月内）',
+  short_term: '短期生效（1年）',
+  medium_term: '中期生效（1-3年）',
+  long_term: '长期（3年以上）'
+};
+
+// ==================== 政策业务影响结构 ====================
+export interface QuantitativeEffect {
+  parameter: string;           // 受影响参数名
+  changeDirection: 'increase' | 'decrease' | 'neutral';  // 变化方向
+  estimatedMagnitude: string;  // 估算幅度（如 "+30～50元/千瓦·年"）
+  effectiveYear: string;       // 生效年份
+  unit?: string;               // 单位
+}
+
+export interface BusinessImpact {
+  businessUnit: BusinessUnit;          // 业务板块
+  impactPath: string;                  // 影响路径描述
+  quantitativeEffect: QuantitativeEffect;  // 量化影响
+  affectedMetrics: string[];           // 受影响指标列表
+  confidence: number;                  // 置信度 0-1
+  impactScore: number;                 // 影响强度评分 1-10
+}
+
+export interface PolicyWithBusinessImpact {
+  id: string;
+  title: string;
+  releaseDate: string;
+  authority: string;
+  category: string;
+  summary: string;
+  businessImpacts: BusinessImpact[];   // 业务影响清单
+  impactTiming: ImpactTiming;
+  keywords: string[];
+  status: 'pending' | 'analyzing' | 'completed' | 'archived';
+}
+
+// ==================== 业务推演模型 ====================
+export interface BusinessModelParams {
+  // 水电参数
+  hydro?: {
+    baseElectricPrice: number;      // 基准电价 元/MWh
+    waterScenario: 'abundant' | 'normal' | 'dry';  // 来水场景
+    ecologicalFlow: number;         // 生态流量约束
+    pumpStorageRevenue: number;     // 抽蓄调用收益 万元
+  };
+  // 火电参数
+  thermal?: {
+    coalPrice: number;              // 煤价 元/吨
+    baseElectricPrice: number;      // 基准电价
+    capacityCompensation: number;   // 容量补偿 元/kW·年
+    carbonQuota: number;            // 碳排放配额
+    carbonPrice: number;            // 碳价 元/吨
+    flexibilityRetrofit: number;    // 灵活性改造进度 0-1
+    frequencyRegulationRevenue: number;  // 调频收益 万元
+  };
+  // 新能源参数
+  renewable?: {
+    guaranteedHours: number;        // 保障收购小时
+    marketDiscountRate: number;     // 市场化交易折价率
+    greenCertPrice: number;         // 绿证价格 元/张
+    greenCertSalesRate: number;     // 绿证销售率 0-1
+    storageCost: number;            // 储能配置成本 万元
+    curtailmentRate: number;        // 弃风弃光率
+  };
+  // 天然气参数
+  gas?: {
+    longTermGasPrice: number;       // 长协气价
+    spotGasPrice: number;           // 现货气价
+    transmissionFee: number;        // 管输费
+    terminalPrice: number;          // 终端售价
+    salesVolume: number;            // 销气量 万方
+  };
+}
+
+export interface BusinessSimulationResult {
+  businessUnit: BusinessUnit;
+  year: number;
+  // 通用指标
+  revenue: number;           // 收入 万元
+  cost: number;              // 成本 万元
+  profit: number;            // 利润 万元
+  // 板块特有指标
+  metrics: Record<string, number>;
+}
+
+// ==================== 推演场景 ====================
+export interface SimulationScenario {
   id: string;
   name: string;
+  description: string;
+  type: 'baseline' | 'policy' | 'custom';
+  params: BusinessModelParams;
+  policyImpacts: string[];   // 关联的政策影响ID
+  createdAt: string;
+}
+
+// ==================== 推演结果 ====================
+export interface SimulationResult {
+  scenarioId: string;
+  businessUnit: BusinessUnit;
+  results: BusinessSimulationResult[];
+  comparison?: {
+    baselineId: string;
+    profitChange: number;      // 利润变动 万元
+    profitChangePercent: number; // 利润变动百分比
+    mainFactors: {
+      factor: string;
+      impact: number;
+    }[];
+  };
+}
+
+// ==================== 业务资产 ====================
+export interface BusinessAsset {
+  id: string;
+  name: string;
+  businessUnit: BusinessUnit;
+  location: string;           // 地理位置
+  capacity: number;           // 装机容量 MW
+  annualGeneration: number;   // 年发电量 GWh
+  status: 'operating' | 'construction' | 'planning';
+  impactAlert?: 'high' | 'medium' | 'low' | 'none';  // 政策影响预警
+}
+
+// ==================== 示例数据 ====================
+
+// 湖北能源集团主要发电资产
+export const businessAssets: BusinessAsset[] = [
+  // 水电资产
+  { id: 'hydro-001', name: '清江隔河岩水电站', businessUnit: 'hydro', location: '宜昌市长阳县', capacity: 1200, annualGeneration: 3200, status: 'operating', impactAlert: 'medium' },
+  { id: 'hydro-002', name: '清江高坝洲水电站', businessUnit: 'hydro', location: '宜昌市宜都市', capacity: 540, annualGeneration: 1800, status: 'operating', impactAlert: 'none' },
+  { id: 'hydro-003', name: '清江水布垭水电站', businessUnit: 'hydro', location: '恩施州巴东县', capacity: 1840, annualGeneration: 4200, status: 'operating', impactAlert: 'low' },
+  // 火电资产
+  { id: 'thermal-001', name: '鄂州电厂', businessUnit: 'thermal', location: '鄂州市', capacity: 2400, annualGeneration: 12000, status: 'operating', impactAlert: 'high' },
+  { id: 'thermal-002', name: '襄阳电厂', businessUnit: 'thermal', location: '襄阳市', capacity: 1200, annualGeneration: 6000, status: 'operating', impactAlert: 'high' },
+  { id: 'thermal-003', name: '荆州电厂', businessUnit: 'thermal', location: '荆州市', capacity: 660, annualGeneration: 3300, status: 'operating', impactAlert: 'medium' },
+  // 新能源资产
+  { id: 'renewable-001', name: '随州光伏电站群', businessUnit: 'renewable', location: '随州市', capacity: 500, annualGeneration: 600, status: 'operating', impactAlert: 'medium' },
+  { id: 'renewable-002', name: '恩施风电场群', businessUnit: 'renewable', location: '恩施州', capacity: 300, annualGeneration: 500, status: 'operating', impactAlert: 'low' },
+  { id: 'renewable-003', name: '黄冈光伏电站', businessUnit: 'renewable', location: '黄冈市', capacity: 200, annualGeneration: 240, status: 'construction', impactAlert: 'none' },
+];
+
+// 政策业务影响示例数据
+export const policyBusinessImpacts: PolicyWithBusinessImpact[] = [
+  {
+    id: 'P20260610_NDRC_001',
+    title: '《关于进一步完善电力现货市场交易机制的通知》',
+    releaseDate: '2026-06-10',
+    authority: '国家发展改革委 国家能源局',
+    category: '电力市场政策',
+    summary: '深化电力现货市场改革，扩大现货交易范围，完善中长期合同与现货交易衔接机制',
+    businessImpacts: [
+      {
+        businessUnit: 'thermal',
+        impactPath: '现货交易比例扩大',
+        quantitativeEffect: {
+          parameter: 'spotTradingRatio',
+          changeDirection: 'increase',
+          estimatedMagnitude: '+15%',
+          effectiveYear: '2026',
+          unit: '%'
+        },
+        affectedMetrics: ['电价波动率', '经营风险', '收益稳定性'],
+        confidence: 0.88,
+        impactScore: 8
+      },
+      {
+        businessUnit: 'hydro',
+        impactPath: '水电参与现货交易',
+        quantitativeEffect: {
+          parameter: 'hydroSpotRevenue',
+          changeDirection: 'increase',
+          estimatedMagnitude: '+5%～10%',
+          effectiveYear: '2026',
+          unit: '%'
+        },
+        affectedMetrics: ['水电利润', '市场化收益'],
+        confidence: 0.75,
+        impactScore: 6
+      }
+    ],
+    impactTiming: 'immediate',
+    keywords: ['电力现货', '市场化', '交易机制'],
+    status: 'analyzing'
+  },
+  {
+    id: 'P20260608_NDRC_002',
+    title: '《关于完善煤电容量电价机制的通知》',
+    releaseDate: '2026-06-08',
+    authority: '国家发展改革委',
+    category: '电价政策',
+    summary: '完善煤电容量电价机制，容量补偿标准从100元/千瓦·年提升至130元/千瓦·年，2027年起执行',
+    businessImpacts: [
+      {
+        businessUnit: 'thermal',
+        impactPath: '容量电价机制调整',
+        quantitativeEffect: {
+          parameter: 'capacityCompensation',
+          changeDirection: 'increase',
+          estimatedMagnitude: '+30元/千瓦·年',
+          effectiveYear: '2027',
+          unit: '元/kW·年'
+        },
+        affectedMetrics: ['火电利润', '固定成本回收率', '利用小时敏感度'],
+        confidence: 0.85,
+        impactScore: 9
+      }
+    ],
+    impactTiming: 'medium_term',
+    keywords: ['容量电价', '煤电', '补偿机制'],
+    status: 'completed'
+  },
+  {
+    id: 'P20260605_NEA_001',
+    title: '《关于促进新型储能发展的指导意见》',
+    releaseDate: '2026-06-05',
+    authority: '国家能源局',
+    category: '新能源政策',
+    summary: '加快新型储能规模化发展，完善储能价格形成机制，推动储能参与电力市场',
+    businessImpacts: [
+      {
+        businessUnit: 'renewable',
+        impactPath: '储能配套成本下降',
+        quantitativeEffect: {
+          parameter: 'storageCost',
+          changeDirection: 'decrease',
+          estimatedMagnitude: '-15%～20%',
+          effectiveYear: '2026',
+          unit: '%'
+        },
+        affectedMetrics: ['新能源消纳', '弃风弃光率', '项目经济性'],
+        confidence: 0.82,
+        impactScore: 7
+      },
+      {
+        businessUnit: 'comprehensive',
+        impactPath: '储能商业模式创新',
+        quantitativeEffect: {
+          parameter: 'storageRevenue',
+          changeDirection: 'increase',
+          estimatedMagnitude: '+20%～30%',
+          effectiveYear: '2027',
+          unit: '%'
+        },
+        affectedMetrics: ['综合能源收益', '虚拟电厂价值'],
+        confidence: 0.70,
+        impactScore: 6
+      }
+    ],
+    impactTiming: 'short_term',
+    keywords: ['储能', '新型储能', '电力市场'],
+    status: 'completed'
+  },
+  {
+    id: 'P20260601_MEE_001',
+    title: '《湖北省碳排放权交易管理办法（修订）》',
+    releaseDate: '2026-06-01',
+    authority: '湖北省生态环境厅',
+    category: '碳市场政策',
+    summary: '调整碳配额分配方法，火电行业免费配额比例下降5%，碳价预期上涨',
+    businessImpacts: [
+      {
+        businessUnit: 'thermal',
+        impactPath: '碳配额分配收紧',
+        quantitativeEffect: {
+          parameter: 'carbonQuota',
+          changeDirection: 'decrease',
+          estimatedMagnitude: '-5%免费配额比例',
+          effectiveYear: '2027',
+          unit: '%'
+        },
+        affectedMetrics: ['碳成本', '度电成本', '利润'],
+        confidence: 0.72,
+        impactScore: 8
+      },
+      {
+        businessUnit: 'carbon',
+        impactPath: '碳价上涨预期',
+        quantitativeEffect: {
+          parameter: 'carbonPrice',
+          changeDirection: 'increase',
+          estimatedMagnitude: '+20～30元/吨',
+          effectiveYear: '2027',
+          unit: '元/吨'
+        },
+        affectedMetrics: ['碳资产价值', 'CCER收益'],
+        confidence: 0.68,
+        impactScore: 6
+      }
+    ],
+    impactTiming: 'medium_term',
+    keywords: ['碳配额', '碳交易', '火电'],
+    status: 'analyzing'
+  },
+  {
+    id: 'P20260528_NDRC_003',
+    title: '《关于提高可再生能源绿证交易活跃度的通知》',
+    releaseDate: '2026-05-28',
+    authority: '国家发展改革委 国家能源局',
+    category: '新能源政策',
+    summary: '完善绿证交易制度，扩大绿证强制消纳范围，提高绿证价格发现效率',
+    businessImpacts: [
+      {
+        businessUnit: 'renewable',
+        impactPath: '绿证强制消费比例提高',
+        quantitativeEffect: {
+          parameter: 'greenCertPrice',
+          changeDirection: 'increase',
+          estimatedMagnitude: '+0.02～0.05元/千瓦时',
+          effectiveYear: '2026',
+          unit: '元/kWh'
+        },
+        affectedMetrics: ['风电/光伏等效上网电价', '项目IRR'],
+        confidence: 0.78,
+        impactScore: 7
+      }
+    ],
+    impactTiming: 'short_term',
+    keywords: ['绿证', '可再生能源', '消纳'],
+    status: 'completed'
+  },
+  {
+    id: 'P20260520_NEA_002',
+    title: '《关于加强电力需求侧管理的指导意见》',
+    releaseDate: '2026-05-20',
+    authority: '国家能源局',
+    category: '电力政策',
+    summary: '强化需求侧响应能力，完善需求响应补偿机制，推动虚拟电厂建设',
+    businessImpacts: [
+      {
+        businessUnit: 'comprehensive',
+        impactPath: '需求响应收益增加',
+        quantitativeEffect: {
+          parameter: 'demandResponseRevenue',
+          changeDirection: 'increase',
+          estimatedMagnitude: '+50%',
+          effectiveYear: '2026',
+          unit: '%'
+        },
+        affectedMetrics: ['综合能源服务收益', '负荷调节能力'],
+        confidence: 0.75,
+        impactScore: 6
+      },
+      {
+        businessUnit: 'thermal',
+        impactPath: '调峰压力缓解',
+        quantitativeEffect: {
+          parameter: 'peakShavingCost',
+          changeDirection: 'decrease',
+          estimatedMagnitude: '-10%～15%',
+          effectiveYear: '2027',
+          unit: '%'
+        },
+        affectedMetrics: ['调频成本', '灵活性需求'],
+        confidence: 0.65,
+        impactScore: 5
+      }
+    ],
+    impactTiming: 'short_term',
+    keywords: ['需求侧', '虚拟电厂', '需求响应'],
+    status: 'completed'
+  },
+  {
+    id: 'P20260515_MNR_001',
+    title: '《关于进一步规范煤层气开发利用的通知》',
+    releaseDate: '2026-05-15',
+    authority: '国家能源局 自然资源部',
+    category: '天然气政策',
+    summary: '鼓励煤层气勘探开发，完善煤层气定价机制，提高煤层气利用效率',
+    businessImpacts: [
+      {
+        businessUnit: 'gas',
+        impactPath: '气源多元化',
+        quantitativeEffect: {
+          parameter: 'gasSupplyDiversity',
+          changeDirection: 'increase',
+          estimatedMagnitude: '+8%',
+          effectiveYear: '2027',
+          unit: '%'
+        },
+        affectedMetrics: ['气源保障', '采购成本'],
+        confidence: 0.70,
+        impactScore: 5
+      }
+    ],
+    impactTiming: 'medium_term',
+    keywords: ['煤层气', '天然气', '气源'],
+    status: 'pending'
+  },
+  {
+    id: 'P20260510_NDRC_004',
+    title: '《关于深化上网电价市场化改革的通知》',
+    releaseDate: '2026-05-10',
+    authority: '国家发展改革委',
+    category: '电价政策',
+    summary: '扩大电价浮动范围，完善电价形成机制，推进工商业用户直接参与电力交易',
+    businessImpacts: [
+      {
+        businessUnit: 'thermal',
+        impactPath: '电价浮动区间扩大',
+        quantitativeEffect: {
+          parameter: 'priceFloatingRange',
+          changeDirection: 'increase',
+          estimatedMagnitude: '+/-20%',
+          effectiveYear: '2026',
+          unit: '%'
+        },
+        affectedMetrics: ['电价风险', '收益波动', '市场竞争力'],
+        confidence: 0.80,
+        impactScore: 7
+      },
+      {
+        businessUnit: 'hydro',
+        impactPath: '水电电价市场化',
+        quantitativeEffect: {
+          parameter: 'hydroMarketPrice',
+          changeDirection: 'increase',
+          estimatedMagnitude: '+3%～5%',
+          effectiveYear: '2026',
+          unit: '%'
+        },
+        affectedMetrics: ['水电收入', '市场化程度'],
+        confidence: 0.72,
+        impactScore: 5
+      }
+    ],
+    impactTiming: 'immediate',
+    keywords: ['电价改革', '市场化', '浮动电价'],
+    status: 'completed'
+  }
+];
+
+// 业务板块基准参数
+export const baselineParams: BusinessModelParams = {
+  hydro: {
+    baseElectricPrice: 280,  // 元/MWh
+    waterScenario: 'normal',
+    ecologicalFlow: 0.15,
+    pumpStorageRevenue: 5000
+  },
+  thermal: {
+    coalPrice: 750,  // 元/吨
+    baseElectricPrice: 380,
+    capacityCompensation: 100,  // 元/kW·年
+    carbonQuota: 0.85,
+    carbonPrice: 80,
+    flexibilityRetrofit: 0.6,
+    frequencyRegulationRevenue: 8000
+  },
+  renewable: {
+    guaranteedHours: 1800,
+    marketDiscountRate: 0.85,
+    greenCertPrice: 30,
+    greenCertSalesRate: 0.7,
+    storageCost: 2000,
+    curtailmentRate: 0.05
+  },
+  gas: {
+    longTermGasPrice: 2.5,
+    spotGasPrice: 3.2,
+    transmissionFee: 0.3,
+    terminalPrice: 3.8,
+    salesVolume: 50000
+  }
+};
+
+// 业务板块关键指标定义
+export const businessMetrics: Record<BusinessUnit, { key: string; label: string; unit: string }[]> = {
+  hydro: [
+    { key: 'generation', label: '发电量', unit: 'GWh' },
+    { key: 'avgPrice', label: '平均上网电价', unit: '元/MWh' },
+    { key: 'revenue', label: '电力收入', unit: '万元' },
+    { key: 'cost', label: '营业成本', unit: '万元' },
+    { key: 'profit', label: '利润总额', unit: '万元' }
+  ],
+  thermal: [
+    { key: 'utilizationHours', label: '利用小时数', unit: '小时' },
+    { key: 'unitCost', label: '度电成本', unit: '元/MWh' },
+    { key: 'carbonCost', label: '碳成本', unit: '万元' },
+    { key: 'capacityRevenue', label: '容量补偿收入', unit: '万元' },
+    { key: 'profit', label: '利润总额', unit: '万元' }
+  ],
+  renewable: [
+    { key: 'equivalentPrice', label: '等效上网电价', unit: '元/MWh' },
+    { key: 'generationRevenue', label: '发电收入', unit: '万元' },
+    { key: 'subsidyRevenue', label: '补贴收入', unit: '万元' },
+    { key: 'greenCertRevenue', label: '绿证收入', unit: '万元' },
+    { key: 'profit', label: '利润总额', unit: '万元' }
+  ],
+  gas: [
+    { key: 'salesVolume', label: '销气量', unit: '万方' },
+    { key: 'grossMargin', label: '毛差', unit: '元/方' },
+    { key: 'totalGrossProfit', label: '总毛利', unit: '万元' },
+    { key: 'profit', label: '利润总额', unit: '万元' }
+  ],
+  comprehensive: [
+    { key: 'revenue', label: '综合收入', unit: '万元' },
+    { key: 'profit', label: '利润总额', unit: '万元' }
+  ],
+  carbon: [
+    { key: 'allowance', label: '配额盈亏', unit: '万吨' },
+    { key: 'ccerRevenue', label: 'CCER收益', unit: '万元' },
+    { key: 'netPosition', label: '净头寸', unit: '万元' }
+  ]
+};
+
+// ==================== 业务板块扩展数据（用于组件展示）====================
+export interface BusinessSegment {
+  id: BusinessUnit;
+  name: string;
   icon: string;
-  color: string;
   description: string;
   keyMetrics: {
     capacity: number;
-    unit: string;
     growth: number;
+    unit: string;
   };
-  policies: string[];
   impacts: {
     type: 'opportunity' | 'challenge' | 'neutral';
     description: string;
@@ -18,468 +556,262 @@ export interface BusinessSegment {
   recommendations: string[];
 }
 
+export const businessSegments: BusinessSegment[] = [
+  {
+    id: 'hydro',
+    name: '水电板块',
+    icon: '💧',
+    description: '清江流域梯级水电站，包括隔河岩、高坝洲、水布垭等',
+    keyMetrics: { capacity: 3580, growth: 2.5, unit: 'MW' },
+    impacts: [
+      { type: 'neutral', description: '电力市场化改革推进，水电参与现货交易比例提升', urgency: 'medium' },
+      { type: 'challenge', description: '生态流量约束加强，枯水期发电受限', urgency: 'high' }
+    ],
+    recommendations: ['优化水库调度策略', '加强枯水期预测能力', '探索抽蓄联合运行模式']
+  },
+  {
+    id: 'thermal',
+    name: '火电板块',
+    icon: '🔥',
+    description: '鄂州、襄阳、荆州等燃煤电厂，承担基荷和调峰任务',
+    keyMetrics: { capacity: 4260, growth: -3.2, unit: 'MW' },
+    impacts: [
+      { type: 'opportunity', description: '容量电价机制完善，固定成本回收率提升', urgency: 'high' },
+      { type: 'challenge', description: '碳配额收紧，碳成本上升压力', urgency: 'high' },
+      { type: 'challenge', description: '新能源挤占发电空间，利用小时下降', urgency: 'medium' }
+    ],
+    recommendations: ['加快灵活性改造', '优化燃料采购策略', '加强碳资产管理']
+  },
+  {
+    id: 'renewable',
+    name: '新能源板块',
+    icon: '☀️',
+    description: '随州光伏、恩施风电等新能源项目群',
+    keyMetrics: { capacity: 1000, growth: 15.8, unit: 'MW' },
+    impacts: [
+      { type: 'opportunity', description: '绿证强制消费比例提高，绿证收益增加', urgency: 'high' },
+      { type: 'opportunity', description: '可再生能源消纳权重提升', urgency: 'medium' },
+      { type: 'challenge', description: '市场化交易折价压力', urgency: 'medium' }
+    ],
+    recommendations: ['提升绿证销售率', '优化市场化交易策略', '加快储能配套建设']
+  },
+  {
+    id: 'gas',
+    name: '天然气板块',
+    icon: '🏭',
+    description: '湖北省天然气管道网络及终端销售',
+    keyMetrics: { capacity: 50000, growth: 5.2, unit: '万方/日' },
+    impacts: [
+      { type: 'neutral', description: '天然气价格市场化改革推进', urgency: 'medium' },
+      { type: 'opportunity', description: '冬季保供需求增长', urgency: 'high' }
+    ],
+    recommendations: ['优化气源采购结构', '加强储气调峰能力', '拓展终端市场']
+  },
+  {
+    id: 'comprehensive',
+    name: '综合能源',
+    icon: '⚡',
+    description: '综合能源服务、分布式能源、储能等新业务',
+    keyMetrics: { capacity: 500, growth: 20.5, unit: 'MW' },
+    impacts: [
+      { type: 'opportunity', description: '综合能源服务政策支持力度加大', urgency: 'medium' },
+      { type: 'opportunity', description: '储能商业模式逐步成熟', urgency: 'low' }
+    ],
+    recommendations: ['拓展园区综合能源项目', '探索储能商业模式', '发展虚拟电厂业务']
+  },
+  {
+    id: 'carbon',
+    name: '碳资产',
+    icon: '🌱',
+    description: '碳排放权交易、CCER开发、碳资产管理',
+    keyMetrics: { capacity: 200, growth: 8.3, unit: '万吨' },
+    impacts: [
+      { type: 'challenge', description: '碳配额分配收紧，免费比例下降', urgency: 'high' },
+      { type: 'opportunity', description: '碳价上涨预期，碳资产价值提升', urgency: 'medium' }
+    ],
+    recommendations: ['加强碳配额管理', '开发CCER项目', '优化碳交易策略']
+  }
+];
+
+// ==================== 政策影响矩阵数据 ====================
+export interface PolicyImpact {
+  policyId: string;
+  policyTitle: string;
+  segments: {
+    segmentId: string;
+    impactScore: number;
+    analysis: string;
+  }[];
+}
+
+export const policyImpacts: PolicyImpact[] = [
+  {
+    policyId: 'P20260701_NDRC_001',
+    policyTitle: '容量电价机制完善',
+    segments: [
+      { segmentId: 'thermal', impactScore: 85, analysis: '容量补偿提升30元/kW·年，利润显著改善' },
+      { segmentId: 'hydro', impactScore: 10, analysis: '影响较小' },
+      { segmentId: 'renewable', impactScore: -5, analysis: '间接影响，竞争压力增加' },
+      { segmentId: 'gas', impactScore: 0, analysis: '无直接影响' },
+      { segmentId: 'comprehensive', impactScore: 5, analysis: '储能容量价值提升' },
+      { segmentId: 'carbon', impactScore: 0, analysis: '无直接影响' }
+    ]
+  },
+  {
+    policyId: 'P20260702_NDRC_002',
+    policyTitle: '可再生能源消纳权重提升',
+    segments: [
+      { segmentId: 'thermal', impactScore: -25, analysis: '发电空间被挤占' },
+      { segmentId: 'hydro', impactScore: -15, analysis: '调峰压力增加' },
+      { segmentId: 'renewable', impactScore: 70, analysis: '消纳保障增强，收益提升' },
+      { segmentId: 'gas', impactScore: 10, analysis: '燃气调峰需求增加' },
+      { segmentId: 'comprehensive', impactScore: 30, analysis: '综合能源消纳优势' },
+      { segmentId: 'carbon', impactScore: 15, analysis: '减排价值提升' }
+    ]
+  },
+  {
+    policyId: 'P20260703_ECO_001',
+    policyTitle: '碳配额分配调整',
+    segments: [
+      { segmentId: 'thermal', impactScore: -60, analysis: '免费配额下降，碳成本上升' },
+      { segmentId: 'hydro', impactScore: 0, analysis: '无直接影响' },
+      { segmentId: 'renewable', impactScore: 20, analysis: '绿电价值提升' },
+      { segmentId: 'gas', impactScore: -10, analysis: '燃气机组碳成本小幅上升' },
+      { segmentId: 'comprehensive', impactScore: 10, analysis: '低碳服务价值提升' },
+      { segmentId: 'carbon', impactScore: 45, analysis: '碳资产价值提升' }
+    ]
+  }
+];
+
+// ==================== 报告层级定义 ====================
 export interface ReportLevel {
   id: string;
   name: string;
   description: string;
+  color: string;
   audience: string;
   frequency: string;
-  color: string;
-  reports: Report[];
-}
-
-export interface Report {
-  id: string;
-  title: string;
-  level: string;
-  category: string;
-  lastUpdated: string;
-  status: 'published' | 'draft' | 'updating';
-  summary: string;
-  keyFindings: string[];
-  relatedPolicies: string[];
-  affectedSegments: string[];
-}
-
-export interface PolicyImpact {
-  policyId: string;
-  policyTitle: string;
-  releaseDate: string;
-  authority: string;
-  segments: {
-    segmentId: string;
-    impactScore: number;
-    impactType: 'positive' | 'negative' | 'neutral';
-    analysis: string;
-    adaptation: string;
+  reports: {
+    id: string;
+    level: string;
+    title: string;
+    category: string;
+    status: 'published' | 'draft' | 'updating';
+    lastUpdated: string;
+    summary: string;
+    keyFindings: string[];
+    relatedPolicies: string[];
+    affectedSegments: BusinessUnit[];
   }[];
 }
 
-export interface BusinessMetrics {
-  segmentId: string;
+export const reportLevels: ReportLevel[] = [
+  {
+    id: 'L1',
+    name: '决策速览',
+    description: '一页纸摘要，重大政策预警与行动建议',
+    color: '#ef4444',
+    audience: '集团决策层',
+    frequency: '实时',
+    reports: [
+      {
+        id: 'R-L1-001',
+        level: 'L1',
+        title: '容量电价政策影响速览',
+        category: '电价政策',
+        status: 'published',
+        lastUpdated: '2026-06-20',
+        summary: '新容量电价机制预计提升火电板块利润8%-12%，建议重点关注鄂州电厂灵活性改造进度',
+        keyFindings: ['火电板块利润提升显著', '鄂州电厂受益最大', '需关注煤价波动风险'],
+        relatedPolicies: ['容量电价机制完善'],
+        affectedSegments: ['thermal']
+      }
+    ]
+  },
+  {
+    id: 'L2',
+    name: '业务影响专题',
+    description: '详细分析某政策对某板块的推演结果',
+    color: '#3b82f6',
+    audience: '业务部门负责人',
+    frequency: '周报',
+    reports: [
+      {
+        id: 'R-L2-001',
+        level: 'L2',
+        title: '火电板块政策影响专题报告',
+        category: '火电业务',
+        status: 'published',
+        lastUpdated: '2026-06-18',
+        summary: '综合分析容量电价、碳配额、电力市场化等政策对火电板块的影响',
+        keyFindings: ['容量电价提升带来正向收益', '碳成本压力持续增加', '利用小时呈下降趋势'],
+        relatedPolicies: ['容量电价机制', '碳配额分配', '电力市场化改革'],
+        affectedSegments: ['thermal', 'carbon']
+      },
+      {
+        id: 'R-L2-002',
+        level: 'L2',
+        title: '新能源板块政策影响专题报告',
+        category: '新能源业务',
+        status: 'updating',
+        lastUpdated: '2026-06-19',
+        summary: '分析绿证、消纳权重、市场化交易等政策对新能源板块的影响',
+        keyFindings: ['绿证收益显著提升', '消纳保障增强', '市场化折价压力需关注'],
+        relatedPolicies: ['绿证强制消费', '可再生能源消纳', '电力市场化'],
+        affectedSegments: ['renewable']
+      }
+    ]
+  },
+  {
+    id: 'L3',
+    name: '研究分析报告',
+    description: '包含模型参数、敏感性分析、方法论说明',
+    color: '#8b5cf6',
+    audience: '政策研究室',
+    frequency: '月报',
+    reports: [
+      {
+        id: 'R-L3-001',
+        level: 'L3',
+        title: '政策影响推演方法论研究报告',
+        category: '方法论',
+        status: 'draft',
+        lastUpdated: '2026-06-15',
+        summary: '详细说明业务影响推演模型的构建方法、参数校准、敏感性分析方法',
+        keyFindings: ['模型参数已校准至2020-2025实际数据', '敏感性分析覆盖主要政策参数', '置信区间评估方法已建立'],
+        relatedPolicies: ['方法论研究'],
+        affectedSegments: ['hydro', 'thermal', 'renewable', 'gas', 'carbon']
+      }
+    ]
+  }
+];
+
+// ==================== 业务指标历史数据（用于图表）====================
+export interface BusinessMetricData {
+  segmentId: BusinessUnit;
   year: number;
   capacity: number;
   generation: number;
   utilization: number;
-  cost: number;
   revenue: number;
-  carbon: number;
+  cost: number;
+  profit: number;
 }
 
-// 业务板块数据
-export const businessSegments: BusinessSegment[] = [
-  {
-    id: 'thermal',
-    name: '火电业务',
-    icon: '🔥',
-    color: '#ef4444',
-    description: '燃煤发电是集团传统主业，装机容量占比较高，面临碳排放约束和清洁替代压力',
-    keyMetrics: {
-      capacity: 45000,
-      unit: 'MW',
-      growth: -2.5
-    },
-    policies: ['碳达峰行动方案', '煤电淘汰计划', '碳市场扩容'],
-    impacts: [
-      { type: 'challenge', description: '碳配额收紧导致运营成本上升', urgency: 'high' },
-      { type: 'challenge', description: '煤电机组淘汰时间表提前', urgency: 'high' },
-      { type: 'opportunity', description: '灵活性改造可获取辅助服务收益', urgency: 'medium' },
-      { type: 'neutral', description: '大容量高参数机组仍有生存空间', urgency: 'low' }
-    ],
-    recommendations: [
-      '加快煤电机组灵活性改造',
-      '优化资产组合，择机退出老小机组',
-      '布局碳资产管理能力',
-      '探索CCUS技术应用'
-    ]
-  },
-  {
-    id: 'hydro',
-    name: '水电业务',
-    icon: '💧',
-    color: '#3b82f6',
-    description: '水电是清洁能源的重要组成部分，具有调峰调频优势，但开发空间受限',
-    keyMetrics: {
-      capacity: 28000,
-      unit: 'MW',
-      growth: 1.2
-    },
-    policies: ['可再生能源法', '水电开发规划', '电价机制改革'],
-    impacts: [
-      { type: 'opportunity', description: '新型电力系统需要灵活调节电源', urgency: 'high' },
-      { type: 'opportunity', description: '抽水蓄能发展政策支持加强', urgency: 'high' },
-      { type: 'neutral', description: '生态流量要求提高', urgency: 'medium' },
-      { type: 'opportunity', description: '绿电交易溢价收益', urgency: 'medium' }
-    ],
-    recommendations: [
-      '加快抽水蓄能项目布局',
-      '推进梯级水电站联合调度',
-      '拓展水风光一体化基地',
-      '完善生态流量监测体系'
-    ]
-  },
-  {
-    id: 'nuclear',
-    name: '核电业务',
-    icon: '⚛️',
-    color: '#8b5cf6',
-    description: '核电是基荷电源的重要组成部分，具有清洁高效特点，但审批周期长、安全要求高',
-    keyMetrics: {
-      capacity: 12000,
-      unit: 'MW',
-      growth: 5.8
-    },
-    policies: ['核电发展规划', '核安全法规', '核电电价政策'],
-    impacts: [
-      { type: 'opportunity', description: '核电核准提速，迎来新一轮发展', urgency: 'high' },
-      { type: 'opportunity', description: '核电参与电力市场空间扩大', urgency: 'medium' },
-      { type: 'neutral', description: '安全监管要求持续提升', urgency: 'medium' },
-      { type: 'opportunity', description: '小型堆技术示范项目推进', urgency: 'low' }
-    ],
-    recommendations: [
-      '积极参与新核电项目竞标',
-      '提升核电运维服务能力',
-      '关注小型模块化反应堆机遇',
-      '加强核安全文化建设'
-    ]
-  },
-  {
-    id: 'wind',
-    name: '风电业务',
-    icon: '🌪️',
-    color: '#06b6d4',
-    description: '风电是新能源发展的主力军，陆上风电成本优势明显，海上风电前景广阔',
-    keyMetrics: {
-      capacity: 35000,
-      unit: 'MW',
-      growth: 15.2
-    },
-    policies: ['新能源发展规划', '风电上网电价政策', '海上风电发展规划'],
-    impacts: [
-      { type: 'opportunity', description: '大基地项目提供规模发展机遇', urgency: 'high' },
-      { type: 'opportunity', description: '海上风电进入平价时代', urgency: 'high' },
-      { type: 'challenge', description: '用地用海约束趋严', urgency: 'medium' },
-      { type: 'challenge', description: '电力市场交易价格波动', urgency: 'medium' }
-    ],
-    recommendations: [
-      '加快风光大基地项目获取',
-      '深耕海上风电资源',
-      '提升智能运维能力',
-      '探索分散式风电开发'
-    ]
-  },
-  {
-    id: 'solar',
-    name: '光伏业务',
-    icon: '☀️',
-    color: '#fbbf24',
-    description: '光伏发电成本持续下降，应用场景日益丰富，是新能源增长最快的板块',
-    keyMetrics: {
-      capacity: 42000,
-      unit: 'MW',
-      growth: 28.5
-    },
-    policies: ['新能源发展规划', '光伏用地政策', '整县屋顶分布式光伏'],
-    impacts: [
-      { type: 'opportunity', description: '组件成本下降提升项目收益率', urgency: 'high' },
-      { type: 'opportunity', description: '分布式光伏整县推进机遇', urgency: 'high' },
-      { type: 'challenge', description: '用地政策趋紧影响大型项目开发', urgency: 'medium' },
-      { type: 'neutral', description: '市场化交易比例提升', urgency: 'medium' }
-    ],
-    recommendations: [
-      '加大分布式光伏开发力度',
-      '推进农光互补、渔光互补模式',
-      '布局光伏+储能综合项目',
-      '拓展 BIPV 等新应用场景'
-    ]
-  },
-  {
-    id: 'storage',
-    name: '储能业务',
-    icon: '🔋',
-    color: '#22c55e',
-    description: '储能是构建新型电力系统的关键技术，锂电池储能快速发展，液流电池、压缩空气储能等长时储能前景广阔',
-    keyMetrics: {
-      capacity: 5000,
-      unit: 'MWh',
-      growth: 85.3
-    },
-    policies: ['新型储能发展指导意见', '储能电价机制', '强制配储政策'],
-    impacts: [
-      { type: 'opportunity', description: '强制配储政策带来市场需求', urgency: 'high' },
-      { type: 'opportunity', description: '共享储能商业模式成熟', urgency: 'high' },
-      { type: 'challenge', description: '盈利模式依赖政策补贴', urgency: 'medium' },
-      { type: 'opportunity', description: '长时储能技术示范应用', urgency: 'low' }
-    ],
-    recommendations: [
-      '加快电网侧共享储能布局',
-      '构建储能系统集成能力',
-      '探索储能资产证券化',
-      '布局液流电池等新技术'
-    ]
-  }
-];
-
-// 报告层级数据
-export const reportLevels: ReportLevel[] = [
-  {
-    id: 'strategic',
-    name: '战略层报告',
-    description: '面向集团董事会、高管层，提供中长期战略决策支持',
-    audience: '董事会、高管层',
-    frequency: '季度/年度',
-    color: '#8b5cf6',
-    reports: [
-      {
-        id: 'str-001',
-        title: '能源政策环境全景分析报告',
-        level: 'strategic',
-        category: '政策环境',
-        lastUpdated: '2024-01-15',
-        status: 'published',
-        summary: '系统分析国内外能源政策走向，评估对集团战略的影响',
-        keyFindings: [
-          '双碳目标加速推进，清洁能源发展迎来黄金期',
-          '电力市场化改革深入，市场机制逐步完善',
-          '能源安全重要性提升，兜底保障能力建设加强'
-        ],
-        relatedPolicies: ['碳达峰行动方案', '能源发展规划'],
-        affectedSegments: ['thermal', 'hydro', 'nuclear', 'wind', 'solar', 'storage']
-      },
-      {
-        id: 'str-002',
-        title: '电源结构优化战略研究报告',
-        level: 'strategic',
-        category: '战略规划',
-        lastUpdated: '2024-02-20',
-        status: 'published',
-        summary: '研究电源结构优化方向，提出低碳转型路径建议',
-        keyFindings: [
-          '新能源装机占比目标：2030年达到50%',
-          '煤电定位转变：从基荷电源向调节电源转型',
-          '储能成为新型电力系统刚需'
-        ],
-        relatedPolicies: ['新能源发展规划', '煤电转型升级'],
-        affectedSegments: ['thermal', 'wind', 'solar', 'storage']
-      }
-    ]
-  },
-  {
-    id: 'tactical',
-    name: '战术层报告',
-    description: '面向职能部门、业务板块负责人，提供业务决策支持',
-    audience: '职能部门、业务板块',
-    frequency: '月度/季度',
-    color: '#3b82f6',
-    reports: [
-      {
-        id: 'tac-001',
-        title: '新能源政策解读与业务影响分析',
-        level: 'tactical',
-        category: '政策解读',
-        lastUpdated: '2024-03-10',
-        status: 'published',
-        summary: '深入解读新能源相关政策，评估对风光业务的直接影响',
-        keyFindings: [
-          '大基地项目成为新能源发展主战场',
-          '海上风电进入平价发展期',
-          '分布式光伏整县推进模式创新'
-        ],
-        relatedPolicies: ['新能源发展规划', '风电光伏开发建设方案'],
-        affectedSegments: ['wind', 'solar']
-      },
-      {
-        id: 'tac-002',
-        title: '碳市场政策影响及应对策略',
-        level: 'tactical',
-        category: '政策解读',
-        lastUpdated: '2024-03-15',
-        status: 'published',
-        summary: '分析碳市场扩容对火电业务的影响，制定碳资产管理办法',
-        keyFindings: [
-          '碳配额逐步收紧，成本压力增加',
-          'CCER重启带来减排收益新渠道',
-          '绿色电力证书交易机制完善'
-        ],
-        relatedPolicies: ['碳排放权交易管理办法', 'CCER管理办法'],
-        affectedSegments: ['thermal', 'hydro', 'nuclear', 'wind', 'solar']
-      },
-      {
-        id: 'tac-003',
-        title: '电力市场改革影响分析报告',
-        level: 'tactical',
-        category: '市场分析',
-        lastUpdated: '2024-02-28',
-        status: 'published',
-        summary: '评估电力市场改革对各业务板块的影响，提出交易策略建议',
-        keyFindings: [
-          '中长期市场与现货市场衔接',
-          '辅助服务市场品种增加、收益提升',
-          '容量成本回收机制呼之欲出'
-        ],
-        relatedPolicies: ['电力市场建设方案', '深化燃煤发电上网电价改革'],
-        affectedSegments: ['thermal', 'hydro', 'nuclear', 'wind', 'solar', 'storage']
-      }
-    ]
-  },
-  {
-    id: 'operational',
-    name: '执行层报告',
-    description: '面向基层单位、项目团队，提供具体工作指导',
-    audience: '基层单位、项目团队',
-    frequency: '周度/月度',
-    color: '#22c55e',
-    reports: [
-      {
-        id: 'ope-001',
-        title: '项目开发政策合规性指引',
-        level: 'operational',
-        category: '操作指引',
-        lastUpdated: '2024-03-20',
-        status: 'published',
-        summary: '明确各类项目开发需要关注的政策要点和合规要求',
-        keyFindings: [
-          '项目选址需符合国土空间规划',
-          '环境影响评价要求日趋严格',
-          '用地用海审批流程优化'
-        ],
-        relatedPolicies: ['建设项目环境影响评价', '用地政策'],
-        affectedSegments: ['wind', 'solar', 'storage']
-      },
-      {
-        id: 'ope-002',
-        title: '补贴项目申报实务手册',
-        level: 'operational',
-        category: '操作指引',
-        lastUpdated: '2024-03-18',
-        status: 'published',
-        summary: '详细说明各类补贴项目的申报流程和注意事项',
-        keyFindings: [
-          '可再生能源补贴审核趋严',
-          '存量项目补贴确权加速',
-          '新增项目需通过竞争方式获取'
-        ],
-        relatedPolicies: ['可再生能源发展基金', '补贴项目管理'],
-        affectedSegments: ['wind', 'solar', 'hydro']
-      },
-      {
-        id: 'ope-003',
-        title: '电力交易实操指南',
-        level: 'operational',
-        category: '操作指引',
-        lastUpdated: '2024-03-25',
-        status: 'updating',
-        summary: '指导基层单位开展电力市场化交易工作',
-        keyFindings: [
-          '月度交易、现货交易操作要点',
-          '价格风险防控措施',
-          '交易策略制定方法'
-        ],
-        relatedPolicies: ['电力中长期交易规则', '现货市场规则'],
-        affectedSegments: ['thermal', 'hydro', 'nuclear', 'wind', 'solar']
-      }
-    ]
-  }
-];
-
-// 政策业务影响矩阵
-export const policyBusinessImpacts: PolicyImpact[] = [
-  {
-    policyId: 'p001',
-    policyTitle: '《2030年前碳达峰行动方案》',
-    releaseDate: '2021-10-24',
-    authority: '国务院',
-    segments: [
-      { segmentId: 'thermal', impactScore: -85, impactType: 'negative', analysis: '碳排放约束强化，煤电减排压力巨大', adaptation: '加快灵活性改造，降低碳排放强度' },
-      { segmentId: 'wind', impactScore: 75, impactType: 'positive', analysis: '明确可再生能源发展目标，风电迎来机遇', adaptation: '加大风电项目开发力度' },
-      { segmentId: 'solar', impactScore: 80, impactType: 'positive', analysis: '光伏装机目标提升，市场空间广阔', adaptation: '加快分布式和集中式项目布局' },
-      { segmentId: 'storage', impactScore: 70, impactType: 'positive', analysis: '新型储能成为刚需，政策支持明确', adaptation: '加快储能项目布局' }
-    ]
-  },
-  {
-    policyId: 'p002',
-    policyTitle: '《关于促进新时代新能源高质量发展的实施方案》',
-    releaseDate: '2022-06-01',
-    authority: '国家发改委',
-    segments: [
-      { segmentId: 'wind', impactScore: 90, impactType: 'positive', analysis: '风电项目用地用海政策优化，开发成本降低', adaptation: '加快风光大基地项目申报' },
-      { segmentId: 'solar', impactScore: 85, impactType: 'positive', analysis: '光伏用地政策明确，消纳保障机制完善', adaptation: '推进整县分布式光伏' },
-      { segmentId: 'thermal', impactScore: -40, impactType: 'negative', analysis: '新能源消纳责任权重约束传统电源空间', adaptation: '提升灵活调节能力' }
-    ]
-  },
-  {
-    policyId: 'p003',
-    policyTitle: '《关于进一步深化电力体制改革的若干意见》',
-    releaseDate: '2015-03-15',
-    authority: '中共中央',
-    segments: [
-      { segmentId: 'thermal', impactScore: 30, impactType: 'positive', analysis: '辅助服务市场收益增加，机组灵活性价值体现', adaptation: '深挖辅助服务市场机会' },
-      { segmentId: 'hydro', impactScore: 50, impactType: 'positive', analysis: '抽水蓄能两部制电价落地，盈利模式明确', adaptation: '加快抽蓄项目投资决策' },
-      { segmentId: 'nuclear', impactScore: 40, impactType: 'positive', analysis: '核电参与市场化交易空间扩大', adaptation: '优化核电营销策略' },
-      { segmentId: 'storage', impactScore: 60, impactType: 'positive', analysis: '储能参与电力市场规则明确', adaptation: '探索储能多元化盈利模式' }
-    ]
-  },
-  {
-    policyId: 'p004',
-    policyTitle: '《新型储能发展指导意见》',
-    releaseDate: '2022-03-21',
-    authority: '国家发改委',
-    segments: [
-      { segmentId: 'storage', impactScore: 95, impactType: 'positive', analysis: '明确储能发展目标，政策支持力度大', adaptation: '加速储能产业布局' },
-      { segmentId: 'wind', impactScore: 50, impactType: 'positive', analysis: '强制配储要求带动风电+储能模式', adaptation: '探索风光储一体化项目' },
-      { segmentId: 'solar', impactScore: 55, impactType: 'positive', analysis: '光伏配储成为标配，提升项目竞争力', adaptation: '打造光储综合解决方案' }
-    ]
-  },
-  {
-    policyId: 'p005',
-    policyTitle: '《碳排放权交易管理办法（试行）》',
-    releaseDate: '2020-12-31',
-    authority: '生态环境部',
-    segments: [
-      { segmentId: 'thermal', impactScore: -75, impactType: 'negative', analysis: '碳成本成为煤电重要支出项', adaptation: '加强碳资产管理，降低履约成本' },
-      { segmentId: 'hydro', impactScore: 20, impactType: 'positive', analysis: '清洁能源核证减排量（CCER）可交易', adaptation: '开发水电类CCER项目' },
-      { segmentId: 'wind', impactScore: 25, impactType: 'positive', analysis: '新能源CCER收益增厚项目回报', adaptation: '积极申报CCER项目' },
-      { segmentId: 'solar', impactScore: 25, impactType: 'positive', analysis: '光伏CCER贡献绿色电力价值', adaptation: '推进光伏CCER开发' }
-    ]
-  },
-  {
-    policyId: 'p006',
-    policyTitle: '《"十四五"现代能源体系规划》',
-    releaseDate: '2022-03-22',
-    authority: '国家发改委',
-    segments: [
-      { segmentId: 'nuclear', impactScore: 80, impactType: 'positive', analysis: '明确核电发展目标，核准提速', adaptation: '积极参与核电项目竞标' },
-      { segmentId: 'hydro', impactScore: 70, impactType: 'positive', analysis: '抽水蓄能发展目标明确', adaptation: '加快抽蓄项目核准' },
-      { segmentId: 'thermal', impactScore: -60, impactType: 'negative', analysis: '煤电定位转变，发展空间受限', adaptation: '推进煤电清洁高效转型' },
-      { segmentId: 'wind', impactScore: 85, impactType: 'positive', analysis: '风电发展目标明确，海陆并举', adaptation: '深耕海上风电，拓展陆上大基地' }
-    ]
-  }
-];
-
-// 业务指标数据
-export const businessMetrics: BusinessMetrics[] = [
-  { segmentId: 'thermal', year: 2020, capacity: 48000, generation: 220, utilization: 5200, cost: 0.38, revenue: 88, carbon: 180 },
-  { segmentId: 'thermal', year: 2021, capacity: 47000, generation: 215, utilization: 5180, cost: 0.40, revenue: 92, carbon: 175 },
-  { segmentId: 'thermal', year: 2022, capacity: 46000, generation: 200, utilization: 4900, cost: 0.42, revenue: 95, carbon: 165 },
-  { segmentId: 'thermal', year: 2023, capacity: 45000, generation: 195, utilization: 4800, cost: 0.45, revenue: 98, carbon: 155 },
-  { segmentId: 'hydro', year: 2020, capacity: 26000, generation: 100, utilization: 4200, cost: 0.15, revenue: 45, carbon: 0 },
-  { segmentId: 'hydro', year: 2021, capacity: 26500, generation: 105, utilization: 4300, cost: 0.15, revenue: 48, carbon: 0 },
-  { segmentId: 'hydro', year: 2022, capacity: 27200, generation: 108, utilization: 4400, cost: 0.16, revenue: 52, carbon: 0 },
-  { segmentId: 'hydro', year: 2023, capacity: 28000, generation: 115, utilization: 4500, cost: 0.16, revenue: 55, carbon: 0 },
-  { segmentId: 'wind', year: 2020, capacity: 22000, generation: 45, utilization: 2300, cost: 0.20, revenue: 25, carbon: 0 },
-  { segmentId: 'wind', year: 2021, capacity: 26000, generation: 55, utilization: 2400, cost: 0.19, revenue: 32, carbon: 0 },
-  { segmentId: 'wind', year: 2022, capacity: 30000, generation: 68, utilization: 2500, cost: 0.18, revenue: 40, carbon: 0 },
-  { segmentId: 'wind', year: 2023, capacity: 35000, generation: 85, utilization: 2700, cost: 0.17, revenue: 52, carbon: 0 },
-  { segmentId: 'solar', year: 2020, capacity: 18000, generation: 25, utilization: 1500, cost: 0.22, revenue: 15, carbon: 0 },
-  { segmentId: 'solar', year: 2021, capacity: 24000, generation: 38, utilization: 1700, cost: 0.20, revenue: 22, carbon: 0 },
-  { segmentId: 'solar', year: 2022, capacity: 32000, generation: 52, utilization: 1800, cost: 0.18, revenue: 32, carbon: 0 },
-  { segmentId: 'solar', year: 2023, capacity: 42000, generation: 75, utilization: 1900, cost: 0.16, revenue: 48, carbon: 0 },
-  { segmentId: 'nuclear', year: 2020, capacity: 10000, generation: 80, utilization: 7500, cost: 0.18, revenue: 55, carbon: 0 },
-  { segmentId: 'nuclear', year: 2021, capacity: 10800, generation: 85, utilization: 7600, cost: 0.18, revenue: 60, carbon: 0 },
-  { segmentId: 'nuclear', year: 2022, capacity: 11400, generation: 90, utilization: 7700, cost: 0.19, revenue: 65, carbon: 0 },
-  { segmentId: 'nuclear', year: 2023, capacity: 12000, generation: 95, utilization: 7800, cost: 0.19, revenue: 70, carbon: 0 },
-  { segmentId: 'storage', year: 2020, capacity: 500, generation: 0.1, utilization: 200, cost: 0.35, revenue: 0.5, carbon: 0 },
-  { segmentId: 'storage', year: 2021, capacity: 1200, generation: 0.3, utilization: 250, cost: 0.32, revenue: 1.2, carbon: 0 },
-  { segmentId: 'storage', year: 2022, capacity: 2800, generation: 0.8, utilization: 300, cost: 0.28, revenue: 3.5, carbon: 0 },
-  { segmentId: 'storage', year: 2023, capacity: 5000, generation: 1.5, utilization: 350, cost: 0.25, revenue: 8, carbon: 0 }
+export const businessMetricHistory: BusinessMetricData[] = [
+  // 水电历史数据
+  { segmentId: 'hydro', year: 2022, capacity: 3400, generation: 8500, utilization: 2500, revenue: 238000, cost: 85000, profit: 153000 },
+  { segmentId: 'hydro', year: 2023, capacity: 3500, generation: 8800, utilization: 2514, revenue: 246400, cost: 88000, profit: 158400 },
+  { segmentId: 'hydro', year: 2024, capacity: 3550, generation: 8600, utilization: 2423, revenue: 240800, cost: 86000, profit: 154800 },
+  { segmentId: 'hydro', year: 2025, capacity: 3580, generation: 9000, utilization: 2514, revenue: 252000, cost: 90000, profit: 162000 },
+  // 火电历史数据
+  { segmentId: 'thermal', year: 2022, capacity: 4200, generation: 21000, utilization: 5000, revenue: 798000, cost: 680000, profit: 118000 },
+  { segmentId: 'thermal', year: 2023, capacity: 4250, generation: 19500, utilization: 4588, revenue: 741000, cost: 640000, profit: 101000 },
+  { segmentId: 'thermal', year: 2024, capacity: 4260, generation: 18000, utilization: 4225, revenue: 684000, cost: 600000, profit: 84000 },
+  { segmentId: 'thermal', year: 2025, capacity: 4260, generation: 17000, utilization: 3991, revenue: 646000, cost: 570000, profit: 76000 },
+  // 新能源历史数据
+  { segmentId: 'renewable', year: 2022, capacity: 600, generation: 800, utilization: 1333, revenue: 28000, cost: 12000, profit: 16000 },
+  { segmentId: 'renewable', year: 2023, capacity: 750, generation: 1000, utilization: 1333, revenue: 35000, cost: 15000, profit: 20000 },
+  { segmentId: 'renewable', year: 2024, capacity: 900, generation: 1200, utilization: 1333, revenue: 42000, cost: 18000, profit: 24000 },
+  { segmentId: 'renewable', year: 2025, capacity: 1000, generation: 1400, utilization: 1400, revenue: 49000, cost: 21000, profit: 28000 }
 ];
