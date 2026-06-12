@@ -1,5 +1,5 @@
 /**
- * 湖北能源集团政策情报对业务影响研究与推演系统
+ * 政策情报对业务影响研究与推演系统
  * 核心数据模型 V2.0
  * 重点：政策对业务板块的即时、中期影响研究与量化推演
  */
@@ -157,7 +157,7 @@ export interface BusinessAsset {
 
 // ==================== 示例数据 ====================
 
-// 湖北能源集团主要发电资产
+// 主要发电资产
 export const businessAssets: BusinessAsset[] = [
   // 水电资产
   { id: 'hydro-001', name: '清江隔河岩水电站', businessUnit: 'hydro', location: '宜昌市长阳县', capacity: 1200, annualGeneration: 3200, status: 'operating', impactAlert: 'medium' },
