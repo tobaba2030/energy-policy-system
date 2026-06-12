@@ -43,13 +43,13 @@ function KPICard({ title, value, change, trend, icon, detail }: {
   detail: string;
 }) {
   return (
-    <div className="relative bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden group">
+    <div className="relative bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden group h-full">
       {/* 背景光效 */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-      <div className="absolute top-0 right-0 w-24 h-24 bg-blue-100/50 rounded-full blur-2xl opacity-50"></div>
+      <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100/50 rounded-full blur-3xl opacity-50"></div>
       
-      <div className="relative">
-        <div className="flex items-start justify-between">
+      <div className="relative flex flex-col h-full">
+        <div className="flex items-start justify-between mb-4">
           <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl text-white shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform">
             {icon}
           </div>
@@ -58,10 +58,10 @@ function KPICard({ title, value, change, trend, icon, detail }: {
             {change}
           </div>
         </div>
-        <div className="mt-4">
+        <div className="mt-auto">
           <p className="text-sm text-gray-500 font-medium">{title}</p>
-          <p className="text-3xl font-bold text-gray-900 mt-2">{value}</p>
-          <p className="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+          <p className="text-4xl font-bold text-gray-900 mt-3">{value}</p>
+          <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
             <Clock className="w-3 h-3" />
             {detail}
           </p>
@@ -100,45 +100,45 @@ function BusinessUnitCard({ unit, assets, alertCount }: {
   const totalGeneration = assets.reduce((sum, a) => sum + a.annualGeneration, 0);
 
   return (
-    <div className="relative bg-white rounded-2xl shadow-sm p-5 border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden group">
+    <div className="relative bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden group h-full">
       {/* 顶部装饰线条 */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500"></div>
       
-      <div className="flex items-center gap-4 mb-4">
-        <div className="p-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl text-blue-600 group-hover:scale-110 transition-transform">
+      <div className="flex items-center gap-4 mb-5">
+        <div className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl text-blue-600 group-hover:scale-110 transition-transform">
           {BusinessIcons[unit]}
         </div>
         <div className="flex-1">
           <h3 className="font-semibold text-gray-900 text-lg">{BusinessUnitLabels[unit]}</h3>
-          <p className="text-xs text-gray-400">{assets.length} 个资产</p>
+          <p className="text-xs text-gray-400 mt-0.5">{assets.length} 个资产</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-3">
+      <div className="grid grid-cols-2 gap-4 mb-5">
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4">
           <p className="text-xs text-gray-500 font-medium">装机容量</p>
-          <p className="text-xl font-bold text-gray-900 mt-0.5">{totalCapacity.toLocaleString()} MW</p>
+          <p className="text-2xl font-bold text-gray-900 mt-1">{totalCapacity.toLocaleString()} MW</p>
         </div>
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-3">
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4">
           <p className="text-xs text-gray-500 font-medium">年发电量</p>
-          <p className="text-xl font-bold text-gray-900 mt-0.5">{totalGeneration.toLocaleString()} GWh</p>
+          <p className="text-2xl font-bold text-gray-900 mt-1">{totalGeneration.toLocaleString()} GWh</p>
         </div>
       </div>
 
       {/* 政策影响预警 */}
       <div className="flex items-center gap-2 flex-wrap">
         {alertCount.high > 0 && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 text-red-700 rounded-full text-xs font-medium">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 rounded-full text-xs font-medium">
             <AlertTriangle className="w-3 h-3" /> {alertCount.high} 高影响
           </span>
         )}
         {alertCount.medium > 0 && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-yellow-50 text-yellow-700 rounded-full text-xs font-medium">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-yellow-50 text-yellow-700 rounded-full text-xs font-medium">
             {alertCount.medium} 中影响
           </span>
         )}
         {alertCount.high === 0 && alertCount.medium === 0 && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-medium">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-full text-xs font-medium">
             <CheckCircle2 className="w-3 h-3" /> 运行正常
           </span>
         )}
@@ -307,9 +307,9 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-6">
-        {/* 核心KPI行 */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="container mx-auto px-6 py-8">
+        {/* 核心KPI行 - 改为2x2布局 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <KPICard
             title="火电政策影响利润变动"
             value="+8.2%"
@@ -344,9 +344,9 @@ export default function Home() {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* 左侧：业务板块概览 */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-2xl shadow-sm p-5 border border-gray-100">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="font-semibold text-gray-900 flex items-center gap-2">
@@ -393,8 +393,8 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* 各业务板块卡片 */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* 各业务板块卡片 - 改为横向排列 */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 {(['hydro', 'thermal', 'renewable'] as BusinessUnit[]).map(unit => (
                   <BusinessUnitCard
                     key={unit}
@@ -411,18 +411,18 @@ export default function Home() {
           </div>
 
           {/* 右侧：政策影响动态 */}
-          <div className="space-y-4">
-            <div className="bg-white rounded-2xl shadow-sm p-5 border border-gray-100">
-              <div className="flex items-center justify-between mb-4">
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+              <div className="flex items-center justify-between mb-5">
                 <h2 className="font-semibold text-gray-900 flex items-center gap-2">
-                  <div className="p-2 bg-orange-50 rounded-lg">
+                  <div className="p-2.5 bg-orange-50 rounded-xl">
                     <Bell className="w-5 h-5 text-orange-600" />
                   </div>
                   <span className="text-lg">政策影响动态</span>
                 </h2>
-                <span className="text-xs text-gray-400">实时更新</span>
+                <span className="text-xs text-gray-400 px-3 py-1 bg-gray-100 rounded-full">实时更新</span>
               </div>
-              <div className="space-y-2 max-h-80 overflow-y-auto">
+              <div className="space-y-3 max-h-80 overflow-y-auto">
                 {policyBusinessImpacts.map(policy => (
                   <PolicyAlertItem key={policy.id} policy={policy} />
                 ))}
@@ -436,14 +436,14 @@ export default function Home() {
             </div>
 
             {/* 政策-业务影响热力矩阵预览 */}
-            <div className="bg-white rounded-2xl shadow-sm p-5 border border-gray-100">
-              <h2 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <div className="p-2 bg-purple-50 rounded-lg">
+            <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+              <h2 className="font-semibold text-gray-900 mb-5 flex items-center gap-2">
+                <div className="p-2.5 bg-purple-50 rounded-xl">
                   <BarChart3 className="w-5 h-5 text-purple-600" />
                 </div>
                 <span className="text-lg">政策-业务影响矩阵</span>
               </h2>
-              <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-3">
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4">
                 <table className="w-full text-xs">
                   <thead>
                     <tr>
@@ -484,12 +484,12 @@ export default function Home() {
             </div>
 
             {/* 快速入口 */}
-            <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-950 rounded-2xl p-5 border border-blue-800/50">
-              <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-                <Zap className="w-4 h-4 text-blue-400" />
+            <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-950 rounded-2xl p-6 border border-blue-800/50">
+              <h3 className="font-semibold text-white mb-5 flex items-center gap-2">
+                <Zap className="w-5 h-5 text-blue-400" />
                 快速入口
               </h3>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-4">
                 <Link to="/policy" className="flex items-center gap-2 p-3 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all text-sm text-white">
                   <FileText className="w-5 h-5 text-blue-400" />
                   <span>政策库</span>
