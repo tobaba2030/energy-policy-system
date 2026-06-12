@@ -1,13 +1,16 @@
 import { useState } from 'react';
-import { Menu, X, FileText, Globe, Home, Network, Bot, BookOpen, FolderOpen, ChevronDown, TrendingUp, BarChart3 } from 'lucide-react';
+import { Menu, X, FileText, Globe, Home, Network, Bot, BookOpen, FolderOpen, ChevronDown, TrendingUp, BarChart3, Sparkles } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const navItems = [
   { path: '/', label: '首页', icon: Home },
   { path: '/policy', label: '政策情报', icon: FileText },
+  { path: '/policy-enhanced', label: '政策情报增强版', icon: Sparkles, isEnhanced: true },
   { path: '/impact', label: '业务影响分析', icon: BarChart3 },
+  { path: '/impact-enhanced', label: '业务影响增强版', icon: Sparkles, isEnhanced: true },
   { path: '/simulation', label: '推演工作台', icon: TrendingUp },
   { path: '/knowledge', label: '知识图谱', icon: Network },
+  { path: '/knowledge-enhanced', label: '知识图谱增强版', icon: Sparkles, isEnhanced: true },
 ];
 
 const moreItems = [
@@ -43,10 +46,10 @@ export default function Navbar() {
                   location.pathname === item.path
                     ? 'bg-blue-50 text-blue-600 font-medium'
                     : 'text-gray-600 hover:bg-gray-100'
-                }`}
+                } ${item.isEnhanced ? 'border border-purple-200 hover:border-purple-400' : ''}`}
               >
-                <item.icon className="w-4 h-4" />
-                <span>{item.label}</span>
+                <item.icon className={`w-4 h-4 ${item.isEnhanced ? 'text-purple-500' : ''}`} />
+                <span className={item.isEnhanced ? 'text-purple-600' : ''}>{item.label}</span>
               </Link>
             ))}
 
